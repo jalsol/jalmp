@@ -19,10 +19,12 @@ set(PROJECT_SOURCES
         src/MainWindow.ui
 )
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(jalmp
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
+		MANUAL_FINALIZATION
+		${PROJECT_SOURCES}
 		src/Track.hpp src/Track.cpp
 		src/Artist.hpp src/Artist.cpp
 		src/TrackBuilder.hpp src/TrackBuilder.cpp
