@@ -1,7 +1,7 @@
 #include "MainWindow.hpp"
 
-#include "ResourceManager.hpp"
-#include "Track.hpp"
+// #include "ResourceManager.hpp"
+// #include "Track.hpp"
 
 #include <QApplication>
 
@@ -10,11 +10,11 @@ int main(int argc, char* argv[]) {
 	MainWindow w;
 	w.show();
 
-	ResourceManager& resourceManager = ResourceManager::instance();
-	Track* track = resourceManager.getTrack(TrackId{1});
+	//	ResourceManager& resourceManager = ResourceManager::instance();
+	//	Track* track = resourceManager.getTrack(TrackId{1});
 
-	if (track != nullptr)
-		qDebug() << track->title();
+	//	if (track != nullptr)
+	//		qDebug() << track->title();
 
 	return a.exec();
 }

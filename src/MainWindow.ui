@@ -31,13 +31,16 @@
   <property name="windowTitle">
    <string>jalmp - just a little music player</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>250</x>
       <y>0</y>
-      <width>980</width>
+      <width>1030</width>
       <height>650</height>
      </rect>
     </property>
@@ -184,10 +187,10 @@
    <widget class="Line" name="verticalLine">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>0</y>
+      <x>250</x>
+      <y>-1</y>
       <width>3</width>
-      <height>650</height>
+      <height>651</height>
      </rect>
     </property>
     <property name="orientation">
@@ -207,20 +210,154 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="MediaSlider" name="mediaSlider">
+   <widget class="MediaSlider" name="seekbar">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>670</y>
-      <width>1000</width>
+      <x>390</x>
+      <y>660</y>
+      <width>500</width>
       <height>16</height>
      </rect>
     </property>
     <property name="maximum">
-     <number>1000</number>
+     <number>500</number>
+    </property>
+    <property name="singleStep">
+     <number>1</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="playButton">
+    <property name="geometry">
+     <rect>
+      <x>625</x>
+      <y>680</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>|&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="nextButton">
+    <property name="geometry">
+     <rect>
+      <x>695</x>
+      <y>680</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&gt;&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="prevButton">
+    <property name="geometry">
+     <rect>
+      <x>555</x>
+      <y>680</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;&lt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="shuffleButton">
+    <property name="geometry">
+     <rect>
+      <x>485</x>
+      <y>680</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Rd</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="repeatButton">
+    <property name="geometry">
+     <rect>
+      <x>765</x>
+      <y>680</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Re</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="songLabel">
+    <property name="geometry">
+     <rect>
+      <x>29</x>
+      <y>660</y>
+      <width>331</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="text">
+     <string>&lt;b&gt;白い砂漠のマーチ&lt;/b&gt;
+&lt;br /&gt;
+cinema staff</string>
+    </property>
+   </widget>
+   <widget class="MediaSlider" name="volume">
+    <property name="geometry">
+     <rect>
+      <x>1170</x>
+      <y>677</y>
+      <width>100</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>100</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="muteButton">
+    <property name="geometry">
+     <rect>
+      <x>1130</x>
+      <y>670</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mu</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="coverLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>400</y>
+      <width>250</width>
+      <height>250</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

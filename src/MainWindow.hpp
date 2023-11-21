@@ -1,7 +1,10 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
+#include <QAudioOutput>
 #include <QMainWindow>
+#include <QMediaPlayer>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -44,5 +47,8 @@ private:
 	};
 
 	Ui::MainWindow *ui;
+	QMediaPlayer *player = new QMediaPlayer(this);
+	QAudioOutput *audioOutput = new QAudioOutput();
+	QTimer *updater = new QTimer(this);
 };
 #endif // MAINWINDOW_HPP
