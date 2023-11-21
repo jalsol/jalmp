@@ -83,6 +83,9 @@ void MainWindow::onSeekbarReleased() {
 }
 
 void MainWindow::onVolumeValueChanged(int value) {
+	if (value > 0) {
+		cachedVolume = ui->volume->value();
+	}
 	audioOutput->setVolume(value / 100.F);
 
 	if (value == 0) {

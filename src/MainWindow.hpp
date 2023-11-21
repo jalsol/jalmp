@@ -50,5 +50,7 @@ private:
 	QMediaPlayer *player = new QMediaPlayer(this);
 	QAudioOutput *audioOutput = new QAudioOutput();
 	QTimer *updater = new QTimer(this);
+	bool mute = false;
+	int cachedVolume = -1;
 };
 #endif // MAINWINDOW_HPP
