@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent)
 			&MainWindow::onVolumeValueChanged);
 	connect(ui->volume, &MediaSlider::sliderPressed, this,
 			&MainWindow::onVolumePressed);
-
 	connect(ui->muteButton, &QPushButton::clicked, this,
 			&MainWindow::onMuteButtonClicked);
 
@@ -83,9 +82,6 @@ void MainWindow::onSeekbarReleased() {
 }
 
 void MainWindow::onVolumeValueChanged(int value) {
-	if (value > 0) {
-		cachedVolume = ui->volume->value();
-	}
 	audioOutput->setVolume(value / 100.F);
 
 	if (value == 0) {
@@ -94,6 +90,12 @@ void MainWindow::onVolumeValueChanged(int value) {
 	} else {
 		mute = false;
 		ui->muteButton->setChecked(false);
+	}
+}
+
+void MainWindow::onVolumePressed() {
+	if (ui->volume->value() > 0) {
+		cachedVolume = ui->volume->value();
 	}
 }
 
