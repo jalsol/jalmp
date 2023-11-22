@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 			&MainWindow::onVolumeValueChanged);
 	connect(ui->volume, &MediaSlider::sliderPressed, this,
 			&MainWindow::onVolumePressed);
+
 	connect(ui->muteButton, &QPushButton::clicked, this,
 			&MainWindow::onMuteButtonClicked);
 
