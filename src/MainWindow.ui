@@ -66,10 +66,10 @@
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>250</x>
-        <y>130</y>
-        <width>53</width>
-        <height>14</height>
+        <x>480</x>
+        <y>350</y>
+        <width>221</width>
+        <height>141</height>
        </rect>
       </property>
       <property name="text">
@@ -280,6 +280,9 @@
     <property name="text">
      <string>Rd</string>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="repeatButton">
     <property name="geometry">
@@ -292,6 +295,9 @@
     </property>
     <property name="text">
      <string>Re</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="songLabel">
@@ -343,6 +349,9 @@ cinema staff</string>
     <property name="text">
      <string>Mu</string>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="coverLabel">
     <property name="geometry">
@@ -359,6 +368,73 @@ cinema staff</string>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>231</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="sidebarButtons">
+     <item>
+      <widget class="QPushButton" name="homeButton">
+       <property name="text">
+        <string>Home</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="searchButton">
+       <property name="text">
+        <string>Search</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="playlistsButton">
+       <property name="text">
+        <string>Playlists</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="text">
+        <string>PushButton</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>

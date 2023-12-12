@@ -4,6 +4,7 @@
 #include <QAudioOutput>
 #include <QMainWindow>
 #include <QMediaPlayer>
+#include <QPixmap>
 #include <QTimer>
 
 QT_BEGIN_NAMESPACE
@@ -52,5 +53,7 @@ private:
 	QTimer *updater = new QTimer(this);
 	bool mute = false;
 	int cachedVolume = -1;
+
+	QPixmap coverArt;
 };
 #endif // MAINWINDOW_HPP
