@@ -68,7 +68,8 @@ Track* ResourceManager::getTrack(TrackId id) {
 
 	if (query.next()) {
 		QString title = query.value(1).toString();
-		QTime duration = query.value(2).toTime();
+		QTime duration =
+			QTime::fromMSecsSinceStartOfDay(query.value(2).toInt());
 		QString cover = query.value(3).toString();
 
 		Track track = TrackBuilder()

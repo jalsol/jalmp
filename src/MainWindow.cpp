@@ -100,12 +100,6 @@ void MainWindow::onVolumePressed() {
 	}
 }
 
-void MainWindow::onVolumePressed() {
-	if (ui->volume->value() > 0) {
-		cachedVolume = ui->volume->value();
-	}
-}
-
 void MainWindow::onMuteButtonClicked() {
 	if (!mute) {
 		cachedVolume = ui->volume->value();
