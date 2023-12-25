@@ -37,6 +37,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 		src/SidebarTitle.hpp src/SidebarTitle.cpp
 		src/SingleArtistPage.hpp src/SingleArtistPage.cpp
 		src/TrackListButton.hpp src/TrackListButton.cpp
+		src/MediaPlayer.hpp src/MediaPlayer.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET jalmp APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

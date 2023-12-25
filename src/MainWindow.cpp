@@ -8,10 +8,7 @@
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent), ui(new Ui::MainWindow) {
 	ui->setupUi(this);
-
-	player->setSource(QUrl::fromLocalFile("../../assets/audio/2.mp3"));
-	player->setAudioOutput(audioOutput);
-	audioOutput->setVolume(100);
+	player->init(this);
 
 	coverArt.load("../../assets/cover/2.jpg");
 	ui->coverLabel->setPixmap(coverArt.scaled(ui->coverLabel->size()));
@@ -21,18 +18,17 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->playButton, &QPushButton::clicked, this,
 			&MainWindow::onPlayButtonClicked);
 
-	connect(ui->seekbar, &MediaSlider::sliderPressed, this,
-			&MainWindow::onSeekbarPressed);
+	connect(ui->seekbar, &MediaSlider::sliderPressed, updater, &QTimer::stop);
 	connect(ui->seekbar, &MediaSlider::sliderReleased, this,
 			&MainWindow::onSeekbarReleased);
 
 	connect(ui->volume, &MediaSlider::valueChanged, this,
 			&MainWindow::onVolumeValueChanged);
-	connect(ui->volume, &MediaSlider::sliderPressed, this,
-			&MainWindow::onVolumePressed);
+	connect(ui->volume, &MediaSlider::sliderPressed, player,
+			&MediaPlayer::cacheVolume);
 
-	connect(ui->muteButton, &QPushButton::clicked, this,
-			&MainWindow::onMuteButtonClicked);
+	connect(ui->muteButton, &QPushButton::clicked, player,
+			&MediaPlayer::toggleMuteVolume);
 
 	connect(ui->repeatButton, &QPushButton::clicked, this,
 			&MainWindow::onRepeatButtonClicked);
@@ -51,8 +47,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() {
 	delete updater;
-	delete audioOutput;
-	delete player;
 	delete ui;
 }
 
@@ -69,8 +63,6 @@ void MainWindow::onPlayButtonClicked() {
 	}
 }
 
-void MainWindow::onSeekbarPressed() { updater->stop(); }
-
 void MainWindow::onSeekbarReleased() {
 	QPoint relativeMousePos = ui->seekbar->mapFromGlobal(QCursor::pos());
 
@@ -83,29 +75,11 @@ void MainWindow::onSeekbarReleased() {
 }
 
 void MainWindow::onVolumeValueChanged(int value) {
-	audioOutput->setVolume(value / 100.F);
-
-	if (value == 0) {
-		mute = true;
+	player->setVolume(value);
+	if (player->isMuted()) {
 		ui->muteButton->setChecked(true);
 	} else {
-		mute = false;
 		ui->muteButton->setChecked(false);
-	}
-}
-
-void MainWindow::onVolumePressed() {
-	if (ui->volume->value() > 0) {
-		cachedVolume = ui->volume->value();
-	}
-}
-
-void MainWindow::onMuteButtonClicked() {
-	if (!mute) {
-		cachedVolume = ui->volume->value();
-		ui->volume->setValue(0);
-	} else {
-		ui->volume->setValue(cachedVolume);
 	}
 }
 
@@ -179,7 +153,10 @@ void MainWindow::update() {
 
 	if (newValue + 1 == ui->seekbar->maximum()) {
 		newValue = 0;
-		ui->playButton->setText("|>");
+		if (player->loops() == QMediaPlayer::Once) {
+			player->pause();
+			ui->playButton->setText("|>");
+		}
 	}
 
 	ui->seekbar->setValue(newValue);

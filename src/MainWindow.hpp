@@ -1,9 +1,9 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QAudioOutput>
+#include "MediaPlayer.hpp"
+
 #include <QMainWindow>
-#include <QMediaPlayer>
 #include <QPixmap>
 #include <QTimer>
 
@@ -21,11 +21,8 @@ public:
 
 private slots:
 	void onPlayButtonClicked();
-	void onSeekbarPressed();
 	void onSeekbarReleased();
 	void onVolumeValueChanged(int value);
-	void onMuteButtonClicked();
-	void onVolumePressed();
 	void onRepeatButtonClicked();
 
 	void onHomeButtonClicked();
@@ -48,11 +45,9 @@ private:
 	};
 
 	Ui::MainWindow *ui;
-	QMediaPlayer *player = new QMediaPlayer(this);
-	QAudioOutput *audioOutput = new QAudioOutput();
+
+	MediaPlayer *player = MediaPlayer::instance();
 	QTimer *updater = new QTimer(this);
-	bool mute = false;
-	int cachedVolume = -1;
 
 	QPixmap coverArt;
 };

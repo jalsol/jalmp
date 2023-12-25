@@ -56,7 +56,6 @@ void SingleArtistPage::loadArtist(ArtistId artistId) {
 		layout->addWidget(trackButton, row, 2, Qt::AlignTop);
 
 		auto *durationLabel = new QLabel();
-		// qDebug() << track->duration().toString();
 		durationLabel->setText(track->duration().toString("mm:ss"));
 		durationLabel->setFixedSize(50, 50);
 		durationLabel->setAlignment(Qt::AlignCenter);
