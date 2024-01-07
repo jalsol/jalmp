@@ -17,7 +17,7 @@ void SidebarTitle::setTitle(TrackId trackId) {
 
 	QString song_title =
 		QString("<a href=\"track/%1\"><b>%2</b></a>")
-			.arg(QString::number(int64_t(trackId)), track->title());
+			.arg(QString::number(int64_t(trackId)), track->name());
 
 	QList<Artist*> artists = rm.getArtistsByTrack(trackId);
 

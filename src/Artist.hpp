@@ -1,32 +1,28 @@
 #ifndef ARTIST_H
 #define ARTIST_H
 
-#include "Types.hpp"
+#include "Entity.hpp"
+// #include "Types.hpp"
 
-#include <QList>
 #include <QString>
 
-// forward-declared
-class Track;
-
-class Artist {
+class Artist : public Entity {
 public:
-	ArtistId id() const;
-	QString name() const;
-	QList<Track> tracks() const;
-	QString cover() const;
+	// EntityId id() const override;
+	// QString name() const override;
+	// QString cover() const override;
 
 private:
 	friend class ArtistBuilder;
 	friend class ResourceManager;
 
-	void setId(ArtistId id);
-	void setName(const QString& name);
-	void setCover(const QString& cover);
+	// void setId(EntityId id) override;
+	// void setName(const QString& name) override;
+	// void setCover(const QString& cover) override;
 
-	ArtistId mId = ArtistId::Invalid;
-	QString mName;
-	QString mCover;
+	// using Entity::mCover;
+	// using Entity::mId;
+	// using Entity::mName;
 };
 
 #endif // ARTIST_H

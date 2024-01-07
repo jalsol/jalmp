@@ -13,7 +13,7 @@ public:
 	friend class ResourceManager;
 
 	TrackBuilder& setId(TrackId id);
-	TrackBuilder& setTitle(const QString& title);
+	TrackBuilder& setName(const QString& Name);
 	TrackBuilder& setDuration(const QTime& duration);
 	TrackBuilder& setCover(const QString& cover);
 	Track build() const;

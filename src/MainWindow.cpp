@@ -43,6 +43,13 @@ MainWindow::MainWindow(QWidget *parent)
 			&MainWindow::onArtistsButtonClicked);
 	connect(ui->sidebarTitle, &SidebarTitle::linkActivated, this,
 			&MainWindow::onSidebarTitleLinkActivated);
+
+	// connect(ui->searchInput, &QLineEdit::textChanged, ui->searchPage,
+	// 		&SearchPage::onSearchTextChanged);
+	connect(ui->searchGoButton, &QPushButton::clicked, ui->searchPage,
+			&SearchPage::onSearchButtonClicked);
+	connect(ui->searchInput, &QLineEdit::returnPressed, ui->searchPage,
+			&SearchPage::onSearchButtonClicked);
 }
 
 MainWindow::~MainWindow() {

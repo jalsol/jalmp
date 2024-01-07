@@ -1,17 +1,17 @@
 #include "Track.hpp"
 
-TrackId Track::id() const { return mId; }
+// EntityId Track::id() const { return mId; }
 
-QString Track::title() const { return mTitle; }
+// QString Track::name() const { return mName; }
 
 QTime Track::duration() const { return mDuration; }
 
-QString Track::cover() const { return mCover; }
+// QString Track::cover() const { return mCover; }
 
-void Track::setId(TrackId id) { mId = id; }
+// void Track::setId(EntityId id) { mId = id; }
 
-void Track::setTitle(const QString& title) { mTitle = title; }
+// void Track::setName(const QString& name) { mName = name; }
 
 void Track::setDuration(const QTime& duration) { mDuration = duration; }
 
-void Track::setCover(const QString& cover) { mCover = cover; }
+// void Track::setCover(const QString& cover) { mCover = cover; }

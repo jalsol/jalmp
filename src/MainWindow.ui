@@ -45,7 +45,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="homePage">
      <widget class="QLabel" name="label">
@@ -62,19 +62,84 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="searchPage">
-     <widget class="QLabel" name="label_2">
+    <widget class="SearchPage" name="searchPage">
+     <widget class="QLabel" name="appLabel_2">
       <property name="geometry">
        <rect>
-        <x>480</x>
-        <y>350</y>
-        <width>221</width>
-        <height>141</height>
+        <x>60</x>
+        <y>0</y>
+        <width>241</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>30</pointsize>
+        <italic>false</italic>
+        <bold>true</bold>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="text">
+       <string>Search</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="searchInput">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>100</y>
+        <width>250</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="searchGoButton">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>100</y>
+        <width>30</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="text">
-       <string>search</string>
+       <string>Go</string>
       </property>
+     </widget>
+     <widget class="QScrollArea" name="searchListArea">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>170</y>
+        <width>911</width>
+        <height>481</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="searchlist">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>909</width>
+         <height>479</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="playlistsPage">
@@ -477,6 +542,12 @@
    <class>SingleArtistPage</class>
    <extends>QWidget</extends>
    <header>SingleArtistPage.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SearchPage</class>
+   <extends>QWidget</extends>
+   <header>SearchPage.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

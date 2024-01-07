@@ -1,15 +1,13 @@
-#include "Playlist.hpp"
+// #include "Playlist.hpp"
 
-#include "Track.hpp"
+// EntityId Playlist::id() const { return mId; }
 
-PlaylistId Playlist::id() const { return mId; }
+// QString Playlist::name() const { return mName; }
 
-QString Playlist::name() const { return mName; }
+// QString Playlist::cover() const { return mCover; }
 
-QList<Track> Playlist::tracks() const { Q_ASSERT(false && "Not implemented"); }
+// void Playlist::setId(EntityId id) { mId = id; }
 
-void Playlist::setId(PlaylistId id) { mId = id; }
+// void Playlist::setName(const QString& name) { mName = name; }
 
-void Playlist::setName(const QString& name) { mName = name; }
-
-void Playlist::setCover(const QString& cover) { mCover = cover; }
+// void Playlist::setCover(const QString& cover) { mCover = cover; }

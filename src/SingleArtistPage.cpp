@@ -1,7 +1,7 @@
 #include "SingleArtistPage.hpp"
 
+#include "EntityListButton.hpp"
 #include "ResourceManager.hpp"
-#include "TrackListButton.hpp"
 
 #include <QDebug>
 #include <QGridLayout>
@@ -52,7 +52,7 @@ void SingleArtistPage::loadArtist(ArtistId artistId) {
 		likeButton->setFixedSize(50, 50);
 		layout->addWidget(likeButton, row, 1, Qt::AlignTop);
 
-		auto *trackButton = new TrackListButton(track);
+		auto *trackButton = new EntityListButton(track);
 		layout->addWidget(trackButton, row, 2, Qt::AlignTop);
 
 		auto *durationLabel = new QLabel();
@@ -82,6 +82,8 @@ void SingleArtistPage::clearList() {
 		delete item->widget();
 		delete item;
 	}
+
+	delete layout;
 }
 
 QWidget *SingleArtistPage::tracklist() {

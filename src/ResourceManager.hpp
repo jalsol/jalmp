@@ -2,6 +2,7 @@
 #define RESOURCEMANAGER_HPP
 
 #include "Artist.hpp"
+#include "Entity.hpp"
 #include "Playlist.hpp"
 #include "Track.hpp"
 #include "Types.hpp"
@@ -23,6 +24,7 @@ public:
 
 	QList<Track*> getTracksByArtist(ArtistId artistId);
 	QList<Artist*> getArtistsByTrack(TrackId trackId);
+	QList<Entity*> getEntitiesByKeyword(const QString& keyword);
 
 private:
 	ResourceManager();

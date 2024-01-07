@@ -1,34 +1,33 @@
 #ifndef TRACK_H
 #define TRACK_H
 
-#include "Artist.hpp"
-#include "Types.hpp"
+#include "Entity.hpp"
+// #include "Types.hpp"
 
-#include <QList>
 #include <QString>
 #include <QTime>
 
-class Track
-{
+class Track : public Entity {
 public:
-	TrackId id() const;
-	QString title() const;
+	// EntityId id() const override;
+	// QString name() const override;
+	// QString cover() const override;
+
 	QTime duration() const;
-	QString cover() const;
 
 private:
 	friend class TrackBuilder;
 	friend class ResourceManager;
 
-	void setId(TrackId id);
-	void setTitle(const QString& title);
+	// void setId(EntityId id) override;
+	// void setName(const QString& name) override;
+	// void setCover(const QString& cover) override;
 	void setDuration(const QTime& duration);
-	void setCover(const QString& cover);
 
-	TrackId mId = TrackId::Invalid;
-	QString mTitle;
+	// using Entity::mCover;
+	// using Entity::mId;
+	// using Entity::mName;
 	QTime mDuration{0, 0, 0, 0};
-	QString mCover;
 };
 
 #endif // TRACK_H

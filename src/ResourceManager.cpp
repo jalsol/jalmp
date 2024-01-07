@@ -30,7 +30,7 @@ Artist* ResourceManager::getArtist(ArtistId id) {
 	}
 
 	QSqlQuery query(mDatabase);
-	query.prepare("SELECT * FROM artist WHERE id = :id");
+	query.prepare("SELECT name, cover_url FROM artist WHERE id = :id");
 	query.bindValue(":id", static_cast<qlonglong>(id));
 
 	if (!query.exec()) {
@@ -38,8 +38,8 @@ Artist* ResourceManager::getArtist(ArtistId id) {
 	}
 
 	if (query.next()) {
-		QString name = query.value(1).toString();
-		QString cover = query.value(2).toString();
+		QString name = query.value(0).toString();
+		QString cover = query.value(1).toString();
 		Artist artist =
 			ArtistBuilder().setId(id).setName(name).setCover(cover).build();
 		mArtists.append(artist);
@@ -58,7 +58,8 @@ Track* ResourceManager::getTrack(TrackId id) {
 	}
 
 	QSqlQuery query(mDatabase);
-	query.prepare("SELECT * FROM track WHERE id = :id");
+	query.prepare(
+		"SELECT title, duration, cover_url FROM track WHERE id = :id");
 	query.bindValue(":id", static_cast<qlonglong>(id));
 
 	if (!query.exec()) {
@@ -67,14 +68,14 @@ Track* ResourceManager::getTrack(TrackId id) {
 	}
 
 	if (query.next()) {
-		QString title = query.value(1).toString();
+		QString title = query.value(0).toString();
 		QTime duration =
-			QTime::fromMSecsSinceStartOfDay(query.value(2).toInt());
-		QString cover = query.value(3).toString();
+			QTime::fromMSecsSinceStartOfDay(query.value(1).toInt());
+		QString cover = query.value(2).toString();
 
 		Track track = TrackBuilder()
 						  .setId(id)
-						  .setTitle(title)
+						  .setName(title)
 						  .setDuration(duration)
 						  .setCover(cover)
 						  .build();
@@ -96,7 +97,7 @@ Playlist* ResourceManager::getPlaylist(PlaylistId id) {
 	}
 
 	QSqlQuery query(mDatabase);
-	query.prepare("SELECT * FROM playlist WHERE id = :id");
+	query.prepare("SELECT name, cover_url FROM playlist WHERE id = :id");
 	query.bindValue(":id", static_cast<qlonglong>(id));
 
 	if (!query.exec()) {
@@ -104,8 +105,8 @@ Playlist* ResourceManager::getPlaylist(PlaylistId id) {
 	}
 
 	if (!query.next()) {
-		QString name = query.value(1).toString();
-		QString cover = query.value(2).toString();
+		QString name = query.value(0).toString();
+		QString cover = query.value(1).toString();
 
 		Playlist playlist =
 			PlaylistBuilder().setId(id).setName(name).setCover(cover).build();
@@ -123,7 +124,7 @@ bool ResourceManager::saveArtist(Artist& artist) {
 	query.bindValue(":name", artist.name());
 
 	if (query.exec()) {
-		ArtistId id = static_cast<ArtistId>(query.lastInsertId().toULongLong());
+		ArtistId id = query.lastInsertId().toULongLong();
 		artist.setId(id);
 		mArtists.append(artist);
 		return true;
@@ -136,11 +137,11 @@ bool ResourceManager::saveTrack(Track& track) {
 	QSqlQuery query(mDatabase);
 	query.prepare(
 		"INSERT INTO track (title, duration) VALUES (:title, :duration)");
-	query.bindValue(":title", track.title());
+	query.bindValue(":title", track.name());
 	query.bindValue(":duration", track.duration());
 
 	if (query.exec()) {
-		TrackId id = static_cast<TrackId>(query.lastInsertId().toULongLong());
+		TrackId id = query.lastInsertId().toULongLong();
 		track.setId(id);
 		mTracks.append(track);
 		return true;
@@ -155,8 +156,7 @@ bool ResourceManager::savePlaylist(Playlist& playlist) {
 	query.bindValue(":name", playlist.name());
 
 	if (query.exec()) {
-		PlaylistId id =
-			static_cast<PlaylistId>(query.lastInsertId().toULongLong());
+		PlaylistId id = query.lastInsertId().toULongLong();
 		playlist.setId(id);
 		mPlaylists.append(playlist);
 		return true;
@@ -177,7 +177,7 @@ QList<Track*> ResourceManager::getTracksByArtist(ArtistId artistId) {
 		QList<TrackId> trackIds;
 
 		while (query.next()) {
-			TrackId id = static_cast<TrackId>(query.value(0).toULongLong());
+			TrackId id = query.value(0).toULongLong();
 			trackIds.append(id);
 
 			// temporarily ignore return the pointer
@@ -209,9 +209,44 @@ QList<Artist*> ResourceManager::getArtistsByTrack(TrackId trackId) {
 
 	if (query.exec()) {
 		while (query.next()) {
-			ArtistId id = static_cast<ArtistId>(query.value(0).toULongLong());
+			ArtistId id = query.value(0).toULongLong();
 			Artist* artist = getArtist(id);
 			result.append(artist);
+		}
+	}
+
+	return result;
+}
+
+QList<Entity*> ResourceManager::getEntitiesByKeyword(const QString& keyword) {
+	QSqlQuery query(mDatabase);
+	QList<Entity*> result;
+
+	// get artists
+	query.prepare("SELECT id FROM artist WHERE name LIKE :keyword");
+	query.bindValue(":keyword", QString("%%1%").arg(keyword));
+
+	if (query.exec()) {
+		while (query.next()) {
+			ArtistId id = query.value(0).toULongLong();
+			Artist* artist = getArtist(id);
+			result.append(artist);
+		}
+	}
+
+	// get tracks
+	query.prepare("SELECT t.id, t.title, a.name "
+				  "FROM artist_track a_t "
+				  "INNER JOIN track t ON a_t.track_id = t.id "
+				  "INNER JOIN artist a ON a_t.artist_id = a.id "
+				  "WHERE t.title LIKE :keyword OR a.name LIKE :keyword");
+	query.bindValue(":keyword", QString("%%1%").arg(keyword));
+
+	if (query.exec()) {
+		while (query.next()) {
+			TrackId id = query.value(0).toULongLong();
+			Track* track = getTrack(id);
+			result.append(track);
 		}
 	}
 

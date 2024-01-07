@@ -7,8 +7,8 @@ TrackBuilder& TrackBuilder::setId(TrackId id) {
 	return *this;
 }
 
-TrackBuilder& TrackBuilder::setTitle(const QString& title) {
-	mTrack.setTitle(title);
+TrackBuilder& TrackBuilder::setName(const QString& name) {
+	mTrack.setName(name);
 	return *this;
 }
 

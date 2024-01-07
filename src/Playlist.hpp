@@ -1,31 +1,28 @@
 #ifndef PLAYLIST_HPP
 #define PLAYLIST_HPP
 
-#include "Types.hpp"
+#include "Entity.hpp"
+// #include "Types.hpp"
 
-#include <QList>
 #include <QString>
 
-// forward-declared
-class Track;
-
-class Playlist {
+class Playlist : public Entity {
 public:
-	PlaylistId id() const;
-	QString name() const;
-	QList<Track> tracks() const;
+	// EntityId id() const override;
+	// QString name() const override;
+	// QString cover() const override;
 
 private:
 	friend class PlaylistBuilder;
 	friend class ResourceManager;
 
-	void setId(PlaylistId id);
-	void setName(const QString& name);
-	void setCover(const QString& cover);
+	// void setId(EntityId id) override;
+	// void setName(const QString& name) override;
+	// void setCover(const QString& cover) override;
 
-	PlaylistId mId = PlaylistId::Invalid;
-	QString mName;
-	QString mCover;
+	// using Entity::mCover;
+	// using Entity::mId;
+	// using Entity::mName;
 };
 
 #endif // PLAYLIST_HPP
