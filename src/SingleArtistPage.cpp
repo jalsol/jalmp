@@ -46,7 +46,7 @@ void SingleArtistPage::loadArtist(ArtistId artistId) {
 		idLabel->setAlignment(Qt::AlignCenter);
 		layout->addWidget(idLabel, row, 0, Qt::AlignTop);
 
-		auto *trackButton = new EntityListButton(track);
+		auto *trackButton = new EntityListButton(track, artist->discography());
 		layout->addWidget(trackButton, row, 1, Qt::AlignTop);
 
 		auto *likeButton = new QPushButton();

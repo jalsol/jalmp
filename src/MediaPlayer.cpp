@@ -1,7 +1,8 @@
 #include "MediaPlayer.hpp"
 
+#include "MediaQueue.hpp"
+
 MediaPlayer::MediaPlayer() {
-	setSource(QUrl::fromLocalFile("../../assets/audio/2.mp3"));
 	setAudioOutput(audioOutput);
 	audioOutput->setVolume(mVolume);
 }
@@ -25,6 +26,29 @@ void MediaPlayer::setVolume(int volume) {
 }
 
 bool MediaPlayer::isMuted() const { return mMute; }
+
+Track *MediaPlayer::invokeTrack(PlaylistId playlistId, TrackId trackId) {
+	if (mPlaylistId == playlistId && mTrackId == trackId) {
+		return mPlayingTrack;
+	}
+
+	MediaQueue &queue = MediaQueue::instance();
+	mPlaylistId = playlistId;
+	mTrackId = trackId;
+
+	queue.setPlaylist(playlistId);
+	queue.skipSystemUntil(trackId);
+	return mPlayingTrack = nextTrack();
+}
+
+Track *MediaPlayer::nextTrack() {
+	MediaQueue &queue = MediaQueue::instance();
+	Track *track = queue.next();
+	setSource(QUrl::fromLocalFile("../.." + track->url()));
+	return track;
+}
+
+PlaylistId MediaPlayer::playlistId() const { return mPlaylistId; }
 
 void MediaPlayer::toggleMuteVolume() {
 	if (!mMute) {

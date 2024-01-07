@@ -10,6 +10,7 @@
 #include <QList>
 #include <QPair>
 #include <QtSql>
+#include <list>
 
 class ResourceManager {
 public:
@@ -18,9 +19,9 @@ public:
 	Track* getTrack(TrackId id);
 	Playlist* getPlaylist(PlaylistId id);
 
-	[[nodiscard]] bool saveArtist(Artist& artist);
-	[[nodiscard]] bool saveTrack(Track& track);
-	[[nodiscard]] bool savePlaylist(Playlist& playlist);
+	// [[nodiscard]] bool saveArtist(Artist& artist);
+	// [[nodiscard]] bool 1saveTrack(Track& track);
+	// [[nodiscard]] bool savePlaylist(Playlist& playlist);
 
 	QList<Track*> getTracksByPlaylist(PlaylistId playlistId);
 
@@ -39,14 +40,14 @@ private:
 	QSqlDatabase mDatabase;
 
 	// entities
-	QList<Artist> mArtists;
-	QList<Track> mTracks;
-	QList<Playlist> mPlaylists;
+	std::list<Artist> mArtists;
+	std::list<Track> mTracks;
+	std::list<Playlist> mPlaylists;
 
 	// relations
-	QList<QPair<ArtistId, TrackId>> mRelArtistTrack;
-	QList<QPair<PlaylistId, TrackId>> mRelPlaylistTrack;
-	QList<QPair<ArtistId, PlaylistId>> mRelArtistPlaylist;
+	// QList<QPair<ArtistId, TrackId>> mRelArtistTrack;
+	// QList<QPair<PlaylistId, TrackId>> mRelPlaylistTrack;
+	// QList<QPair<ArtistId, PlaylistId>> mRelArtistPlaylist;
 };
 
 #endif // RESOURCEMANAGER_HPP

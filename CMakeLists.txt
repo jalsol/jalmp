@@ -41,6 +41,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 		src/SearchPage.hpp src/SearchPage.cpp
 		src/Entity.hpp src/Entity.cpp
 		src/Types.cpp
+		src/MediaQueue.hpp src/MediaQueue.cpp
+		src/Navigator.hpp src/Navigator.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET jalmp APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

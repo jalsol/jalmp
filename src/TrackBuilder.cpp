@@ -22,4 +22,9 @@ TrackBuilder& TrackBuilder::setCover(const QString& cover) {
 	return *this;
 }
 
+TrackBuilder& TrackBuilder::setUrl(const QString& url) {
+	mTrack.setUrl(url);
+	return *this;
+}
+
 Track TrackBuilder::build() const { return mTrack; }

@@ -2,6 +2,7 @@
 #define MAINWINDOW_HPP
 
 #include "MediaPlayer.hpp"
+#include "Navigator.hpp"
 
 #include <QMainWindow>
 #include <QPixmap>
@@ -33,7 +34,12 @@ private slots:
 	void onSidebarTitleLinkActivated(const QString &link);
 	void resetCheckSidebarButtons();
 
+	void onNavigatedToArtist(ArtistId artistId);
+	void onNavigatedToPlaylist(PlaylistId playlistId);
+	void onNavigatedToTrack(PlaylistId playlistId, TrackId trackId);
+
 	void update();
+	void playTrack(Track *track);
 
 private:
 	enum PageId {
@@ -50,5 +56,7 @@ private:
 	QTimer *updater = new QTimer(this);
 
 	QPixmap coverArt;
+
+	Navigator *navigator = Navigator::instance();
 };
 #endif // MAINWINDOW_HPP

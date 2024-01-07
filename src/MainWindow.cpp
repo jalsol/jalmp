@@ -2,6 +2,7 @@
 #include "./ui_MainWindow.h"
 
 #include "MediaSlider.hpp"
+#include "ResourceManager.hpp"
 
 #include <QDebug>
 
@@ -10,8 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->setupUi(this);
 	player->init(this);
 
-	coverArt.load("../../assets/cover/2.jpg");
-	ui->coverLabel->setPixmap(coverArt.scaled(ui->coverLabel->size()));
+	// coverArt.load("../../assets/cover/2.jpg");
+	// ui->coverLabel->setPixmap(coverArt.scaled(ui->coverLabel->size()));
 
 	connect(updater, SIGNAL(timeout()), this, SLOT(update()));
 
@@ -50,6 +51,13 @@ MainWindow::MainWindow(QWidget *parent)
 			&SearchPage::onSearchButtonClicked);
 	connect(ui->searchInput, &QLineEdit::returnPressed, ui->searchPage,
 			&SearchPage::onSearchButtonClicked);
+
+	connect(navigator, &Navigator::navigatedToArtist, this,
+			&MainWindow::onNavigatedToArtist);
+	connect(navigator, &Navigator::navigatedToPlaylist, this,
+			&MainWindow::onNavigatedToPlaylist);
+	connect(navigator, &Navigator::navigatedToTrack, this,
+			&MainWindow::onNavigatedToTrack);
 }
 
 MainWindow::~MainWindow() {
@@ -120,17 +128,26 @@ void MainWindow::onArtistsButtonClicked() {
 	ui->stackedWidget->setCurrentIndex(Artists);
 }
 
+void MainWindow::onNavigatedToArtist(ArtistId artistId) {
+	ui->singleArtistPage->loadArtist(artistId);
+	ui->stackedWidget->setCurrentIndex(SingleArtist);
+	resetCheckSidebarButtons();
+}
+
+void MainWindow::onNavigatedToPlaylist(PlaylistId playlistId) {
+	qDebug() << "PlaylistId: " << playlistId;
+	// ui->playlistPage->loadPlaylist(playlistId);
+	// ui->stackedWidget->setCurrentIndex(SinglePlaylist);
+	// resetCheckSidebarButtons();
+}
+
+void MainWindow::onNavigatedToTrack(PlaylistId playlistId, TrackId trackId) {
+	Track *track = player->invokeTrack(playlistId, trackId);
+	playTrack(track);
+}
+
 void MainWindow::onSidebarTitleLinkActivated(const QString &link) {
-	if (link.startsWith("artist")) {
-		ArtistId artistId{link.section('/', 1).toLongLong()};
-		ui->singleArtistPage->loadArtist(artistId);
-		ui->stackedWidget->setCurrentIndex(SingleArtist);
-		resetCheckSidebarButtons();
-	} else if (link.startsWith("track")) {
-		onHomeButtonClicked();
-		int64_t trackId{link.section('/', 1).toLongLong()};
-		qDebug() << "track:" << trackId;
-	}
+	navigator->navigateTo(link);
 }
 
 void MainWindow::resetCheckSidebarButtons() {
@@ -161,10 +178,45 @@ void MainWindow::update() {
 	if (newValue + 1 == ui->seekbar->maximum()) {
 		newValue = 0;
 		if (player->loops() == QMediaPlayer::Once) {
-			player->pause();
-			ui->playButton->setText("|>");
+			playTrack(player->nextTrack());
 		}
 	}
 
 	ui->seekbar->setValue(newValue);
+}
+
+void MainWindow::playTrack(Track *track) {
+	player->pause();
+	ui->playButton->setText("|>");
+
+	ui->seekbar->setValue(0);
+
+	// change cover art
+	coverArt.load("../.." + track->cover());
+	ui->coverLabel->setPixmap(coverArt.scaled(ui->coverLabel->size()));
+
+	// change title
+	ResourceManager &rm = ResourceManager::instance();
+	QString trackPath = QString("playlist/%1/track/%2")
+							.arg(QString::number(player->playlistId()),
+								 QString::number(track->id()));
+
+	QList<Artist *> artists = rm.getArtistsByTrack(TrackId(track->id()));
+	QString artistsAnchor =
+		QString("<a href=\"artist/%1\">%2</a>")
+			.arg(QString::number(artists[0]->id()), artists[0]->name());
+
+	for (int i = 1; i < artists.size(); ++i) {
+		artistsAnchor +=
+			QString(", <a href=\"artist/%1\">%2</a>")
+				.arg(QString::number(artists[i]->id()), artists[i]->name());
+	}
+
+	ui->sidebarTitle->setText(
+		QString("<a href=\"%1\"><b>%2</b></a>"
+				"<br />"
+				"%3")
+			.arg(trackPath, track->name(), artistsAnchor));
+
+	onPlayButtonClicked();
 }

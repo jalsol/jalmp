@@ -1,14 +1,20 @@
 #include "EntityListButton.hpp"
 
+#include "Navigator.hpp"
+
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPixmap>
 
-EntityListButton::EntityListButton(QWidget *parent) : QPushButton(parent) {}
+EntityListButton::EntityListButton(QWidget *parent) : QPushButton(parent) {
+	connect(this, &QPushButton::clicked, this, &EntityListButton::onClicked);
+}
 
-EntityListButton::EntityListButton(Entity *entity, QWidget *parent)
-	: QPushButton(parent) {
+EntityListButton::EntityListButton(Entity *entity, PlaylistId playlistId,
+								   QWidget *parent)
+	: EntityListButton{parent} {
+	mPlaylistId = playlistId;
 	auto layout = new QHBoxLayout(this);
 
 	// load cover image
@@ -29,4 +35,23 @@ EntityListButton::EntityListButton(Entity *entity, QWidget *parent)
 
 	setLayout(layout);
 	setFixedHeight(50);
+
+	// set data
+	switch (entity->type()) {
+	case EntityType::Artist:
+		mPath = QString("artist/%1").arg(entity->id());
+		break;
+	case EntityType::Playlist:
+		mPath = QString("playlist/%1").arg(entity->id());
+		break;
+	case EntityType::Track:
+		mPath = QString("playlist/%1/track/%2")
+					.arg(QString::number(mPlaylistId),
+						 QString::number(entity->id()));
+		break;
+	default:
+		__builtin_unreachable();
+	}
 }
+
+void EntityListButton::onClicked() { Navigator::instance()->navigateTo(mPath); }

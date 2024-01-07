@@ -1,6 +1,9 @@
 #ifndef MEDIAPLAYER_HPP
 #define MEDIAPLAYER_HPP
 
+#include "Track.hpp"
+#include "Types.hpp"
+
 #include <QAudioOutput>
 #include <QMediaPlayer>
 
@@ -15,6 +18,9 @@ public:
 	static void init(QObject* parent = nullptr);
 
 	bool isMuted() const;
+	Track* invokeTrack(PlaylistId playlistId, TrackId trackId);
+	Track* nextTrack();
+	PlaylistId playlistId() const;
 
 public slots:
 	void setVolume(int volume);
@@ -29,6 +35,9 @@ private:
 	bool mMute = false;
 	int mVolume = 100;
 	int mCachedVolume = -1;
+	PlaylistId mPlaylistId = PlaylistId::Invalid;
+	TrackId mTrackId = TrackId::Invalid;
+	Track* mPlayingTrack = nullptr;
 };
 
 #endif // MEDIAPLAYER_HPP

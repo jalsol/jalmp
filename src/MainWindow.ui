@@ -378,9 +378,9 @@
      <bool>false</bool>
     </property>
     <property name="text">
-     <string>&lt;a href=&quot;track/2&quot;&gt;&lt;b&gt;白い砂漠のマーチ&lt;/b&gt;&lt;/a&gt;
+     <string>&lt;a href=&quot;&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/a&gt;
 &lt;br /&gt;
-&lt;a href=&quot;artist/2&quot;&gt;cinema staff&lt;/a&gt;</string>
+&lt;a href=&quot;&quot;&gt;&lt;/a&gt;</string>
     </property>
     <property name="textInteractionFlags">
      <set>Qt::TextBrowserInteraction</set>
