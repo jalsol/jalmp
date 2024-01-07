@@ -1,10 +1,12 @@
-// #include "Playlist.hpp"
+#include "Playlist.hpp"
 
 // EntityId Playlist::id() const { return mId; }
 
 // QString Playlist::name() const { return mName; }
 
 // QString Playlist::cover() const { return mCover; }
+
+EntityType Playlist::type() const { return EntityType::Playlist; }
 
 // void Playlist::setId(EntityId id) { mId = id; }
 

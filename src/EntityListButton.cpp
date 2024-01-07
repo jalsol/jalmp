@@ -20,7 +20,9 @@ EntityListButton::EntityListButton(Entity *entity, QWidget *parent)
 	layout->addWidget(cover);
 
 	// load text
-	auto *label = new QLabel(entity->name());
+	const auto text = QString("%1: %2").arg(
+		Entity::typeToString(entity->type()), entity->name());
+	auto *label = new QLabel(text);
 	label->setAlignment(Qt::AlignCenter);
 	layout->addWidget(label);
 

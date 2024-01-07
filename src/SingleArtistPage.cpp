@@ -46,14 +46,14 @@ void SingleArtistPage::loadArtist(ArtistId artistId) {
 		idLabel->setAlignment(Qt::AlignCenter);
 		layout->addWidget(idLabel, row, 0, Qt::AlignTop);
 
+		auto *trackButton = new EntityListButton(track);
+		layout->addWidget(trackButton, row, 1, Qt::AlignTop);
+
 		auto *likeButton = new QPushButton();
 		// likeButton->setIcon(QIcon(":/icons/like.png"));
 		likeButton->setText("Like");
 		likeButton->setFixedSize(50, 50);
-		layout->addWidget(likeButton, row, 1, Qt::AlignTop);
-
-		auto *trackButton = new EntityListButton(track);
-		layout->addWidget(trackButton, row, 2, Qt::AlignTop);
+		layout->addWidget(likeButton, row, 2, Qt::AlignTop);
 
 		auto *durationLabel = new QLabel();
 		durationLabel->setText(track->duration().toString("mm:ss"));

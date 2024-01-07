@@ -6,6 +6,8 @@
 
 QTime Track::duration() const { return mDuration; }
 
+EntityType Track::type() const { return EntityType::Track; }
+
 // QString Track::cover() const { return mCover; }
 
 // void Track::setId(EntityId id) { mId = id; }
