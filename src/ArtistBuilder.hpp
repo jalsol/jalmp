@@ -11,6 +11,7 @@ public:
 	ArtistBuilder& setId(ArtistId id);
 	ArtistBuilder& setName(const QString& name);
 	ArtistBuilder& setCover(const QString& cover);
+	ArtistBuilder& setDiscography(PlaylistId discographyId);
 
 	Artist build() const;
 

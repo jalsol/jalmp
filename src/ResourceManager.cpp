@@ -30,7 +30,8 @@ Artist* ResourceManager::getArtist(ArtistId id) {
 	}
 
 	QSqlQuery query(mDatabase);
-	query.prepare("SELECT name, cover_url FROM artist WHERE id = :id");
+	query.prepare(
+		"SELECT name, cover_url, discography_id FROM artist WHERE id = :id");
 	query.bindValue(":id", static_cast<qlonglong>(id));
 
 	if (!query.exec()) {
@@ -40,8 +41,14 @@ Artist* ResourceManager::getArtist(ArtistId id) {
 	if (query.next()) {
 		QString name = query.value(0).toString();
 		QString cover = query.value(1).toString();
-		Artist artist =
-			ArtistBuilder().setId(id).setName(name).setCover(cover).build();
+		PlaylistId discographyId = query.value(2).toLongLong();
+
+		Artist artist = ArtistBuilder()
+							.setId(id)
+							.setName(name)
+							.setCover(cover)
+							.setDiscography(discographyId)
+							.build();
 		mArtists.append(artist);
 
 		return &mArtists.last();
@@ -165,11 +172,11 @@ bool ResourceManager::savePlaylist(Playlist& playlist) {
 	}
 }
 
-QList<Track*> ResourceManager::getTracksByArtist(ArtistId artistId) {
+QList<Track*> ResourceManager::getTracksByPlaylist(PlaylistId playlistId) {
 	QSqlQuery query(mDatabase);
 	query.prepare(
-		"SELECT track_id FROM artist_track WHERE artist_id = :artist_id");
-	query.bindValue(":artist_id", static_cast<qlonglong>(artistId));
+		"SELECT track_id FROM playlist_track WHERE playlist_id = :id");
+	query.bindValue(":id", static_cast<qlonglong>(playlistId));
 
 	QList<Track*> result;
 
@@ -184,8 +191,7 @@ QList<Track*> ResourceManager::getTracksByArtist(ArtistId artistId) {
 			// as we are only fetching the tracks
 
 			// prefetch is required, since pointer values will be invalid
-			// if mTracks is reallocated
-			// TODO: could be solved using a linked list
+			// after the next query
 			getTrack(id);
 		}
 
@@ -197,6 +203,10 @@ QList<Track*> ResourceManager::getTracksByArtist(ArtistId artistId) {
 	}
 
 	return result;
+}
+
+QList<Track*> ResourceManager::getTracksByArtist(ArtistId artistId) {
+	return getTracksByPlaylist(getArtist(artistId)->discography());
 }
 
 QList<Artist*> ResourceManager::getArtistsByTrack(TrackId trackId) {
@@ -256,7 +266,7 @@ QList<Entity*> ResourceManager::getEntitiesByKeyword(const QString& keyword) {
 		"INNER JOIN artist a ON a_t.artist_id = a.id "
 		"WHERE t.title LIKE :keyword OR a.name LIKE :keyword LIMIT :limit");
 	query.bindValue(":keyword", QString("%%1%").arg(keyword));
-	query.bindValue(":limit", QString::number(remaining));
+	query.bindValue(":limit", remaining);
 
 	if (query.exec()) {
 		QList<TrackId> trackIds;

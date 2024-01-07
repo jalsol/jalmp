@@ -15,4 +15,9 @@ ArtistBuilder& ArtistBuilder::setCover(const QString& cover) {
 	return *this;
 }
 
+ArtistBuilder& ArtistBuilder::setDiscography(PlaylistId discographyId) {
+	mArtist.setDiscography(discographyId);
+	return *this;
+}
+
 Artist ArtistBuilder::build() const { return mArtist; }

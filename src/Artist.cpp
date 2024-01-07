@@ -1,15 +1,9 @@
 #include "Artist.hpp"
 
-// EntityId Artist::id() const { return mId; }
-
-// QString Artist::name() const { return mName; }
-
-// QString Artist::cover() const { return mCover; }
-
 EntityType Artist::type() const { return EntityType::Artist; }
 
-// void Artist::setId(EntityId id) { mId = id; }
+PlaylistId Artist::discography() const { return mDiscographyId; }
 
-// void Artist::setName(const QString& name) { mName = name; }
-
-// void Artist::setCover(const QString& cover) { mCover = cover; }
+void Artist::setDiscography(PlaylistId discographyId) {
+	mDiscographyId = discographyId;
+}
