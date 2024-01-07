@@ -1,5 +1,6 @@
 #include "EntityListButton.hpp"
 
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPixmap>

@@ -19,10 +19,16 @@ QLineEdit *SearchPage::searchInput() {
 void SearchPage::onSearchTextChanged(const QString &text) { qDebug() << text; }
 
 void SearchPage::onSearchButtonClicked() {
-	ResourceManager &rm = ResourceManager::instance();
-	auto entities = rm.getEntitiesByKeyword(searchInput()->text());
-
 	clearList();
+
+	const auto &input = searchInput()->text();
+	if (input.isEmpty()) {
+		return;
+	}
+
+	ResourceManager &rm = ResourceManager::instance();
+	auto entities = rm.getEntitiesByKeyword(input);
+
 	QGridLayout *layout = new QGridLayout{searchlist()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
@@ -39,25 +45,15 @@ void SearchPage::onSearchButtonClicked() {
 		idLabel->setAlignment(Qt::AlignCenter);
 		layout->addWidget(idLabel, row, 0, Qt::AlignTop);
 
-		// auto *likeButton = new QPushButton();
-		// // likeButton->setIcon(QIcon(":/icons/like.png"));
-		// likeButton->setText("Like");
-		// likeButton->setFixedSize(50, 50);
-		// layout->addWidget(likeButton, row, 1, Qt::AlignTop);
-
 		auto *trackButton = new EntityListButton(entity);
 		layout->addWidget(trackButton, row, 1, Qt::AlignTop);
-
-		// auto *durationLabel = new QLabel();
-		// durationLabel->setText(entity->duration().toString("mm:ss"));
-		// durationLabel->setFixedSize(50, 50);
-		// durationLabel->setAlignment(Qt::AlignCenter);
-		// layout->addWidget(durationLabel, row, 3, Qt::AlignTop);
 
 		++row;
 	}
 
-	layout->setRowStretch(row - 1, 1);
+	if (row > 0) {
+		layout->setRowStretch(row - 1, 1);
+	}
 
 	// set the scroll area's widget
 	searchlist()->setLayout(layout);

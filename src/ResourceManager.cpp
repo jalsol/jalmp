@@ -223,30 +223,55 @@ QList<Entity*> ResourceManager::getEntitiesByKeyword(const QString& keyword) {
 	QList<Entity*> result;
 
 	// get artists
-	query.prepare("SELECT id FROM artist WHERE name LIKE :keyword");
+	query.prepare("SELECT id FROM artist WHERE name LIKE :keyword LIMIT 20");
 	query.bindValue(":keyword", QString("%%1%").arg(keyword));
 
 	if (query.exec()) {
+		QList<ArtistId> artistIds;
 		while (query.next()) {
 			ArtistId id = query.value(0).toULongLong();
-			Artist* artist = getArtist(id);
-			result.append(artist);
+			artistIds.append(id);
+
+			// similar problem as getTracksByArtist
+			getArtist(id);
+		}
+
+		for (auto& artist : mArtists) {
+			if (artistIds.contains(artist.id())) {
+				result.append(&artist);
+			}
 		}
 	}
 
+	int remaining = 20 - result.size();
+	if (remaining <= 0) {
+		return result;
+	}
+
 	// get tracks
-	query.prepare("SELECT t.id, t.title, a.name "
-				  "FROM artist_track a_t "
-				  "INNER JOIN track t ON a_t.track_id = t.id "
-				  "INNER JOIN artist a ON a_t.artist_id = a.id "
-				  "WHERE t.title LIKE :keyword OR a.name LIKE :keyword");
+	query.prepare(
+		"SELECT t.id "
+		"FROM artist_track a_t "
+		"INNER JOIN track t ON a_t.track_id = t.id "
+		"INNER JOIN artist a ON a_t.artist_id = a.id "
+		"WHERE t.title LIKE :keyword OR a.name LIKE :keyword LIMIT :limit");
 	query.bindValue(":keyword", QString("%%1%").arg(keyword));
+	query.bindValue(":limit", QString::number(remaining));
 
 	if (query.exec()) {
+		QList<TrackId> trackIds;
 		while (query.next()) {
 			TrackId id = query.value(0).toULongLong();
-			Track* track = getTrack(id);
-			result.append(track);
+			trackIds.append(id);
+
+			// similar problem as getTracksByArtist
+			getTrack(id);
+		}
+
+		for (auto& track : mTracks) {
+			if (trackIds.contains(track.id())) {
+				result.append(&track);
+			}
 		}
 	}
 
