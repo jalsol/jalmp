@@ -211,8 +211,9 @@ QList<Entity*> ResourceManager::getEntitiesByKeyword(const QString& keyword) {
 		return result;
 	}
 
-	query.prepare(
-		"SELECT id FROM playlist WHERE name LIKE :keyword LIMIT :limit");
+	query.prepare("SELECT id FROM playlist "
+				  "WHERE name LIKE :keyword AND name NOT LIKE '%Discography%' "
+				  "LIMIT :limit");
 	query.bindValue(":keyword", QString("%%1%").arg(keyword));
 	query.bindValue(":limit", remaining);
 
