@@ -30,6 +30,7 @@ private slots:
 	void onSearchButtonClicked();
 	void onPlaylistsButtonClicked();
 	void onArtistsButtonClicked();
+	void onViewAlbumButtonClicked();
 
 	void onSidebarTitleLinkActivated(const QString &link);
 	void resetCheckSidebarButtons();

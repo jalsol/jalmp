@@ -1,6 +1,7 @@
 #include "SingleArtistPage.hpp"
 
 #include "EntityListButton.hpp"
+#include "MediaQueue.hpp"
 #include "ResourceManager.hpp"
 
 #include <QDebug>
@@ -23,6 +24,7 @@ void SingleArtistPage::fillList() {
 
 	// display tracks in the QScrollArea
 	QList<Track *> tracks = rm.getTracksByArtist(mArtistId);
+	MediaQueue::instance().setPlaylist(tracks);
 	QGridLayout *layout = new QGridLayout{scrollList()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
@@ -39,7 +41,7 @@ void SingleArtistPage::fillList() {
 		idLabel->setAlignment(Qt::AlignCenter);
 		layout->addWidget(idLabel, row, 0, Qt::AlignTop);
 
-		auto *trackButton = new EntityListButton(track, artist->discography());
+		auto *trackButton = new EntityListButton(track);
 		layout->addWidget(trackButton, row, 1, Qt::AlignTop);
 
 		auto *likeButton = new QPushButton();
@@ -71,9 +73,12 @@ void SingleArtistPage::loadArtist(ArtistId artistId) {
 	}
 
 	mArtistId = artistId;
+
 	clearList();
 	fillList();
 }
+
+ArtistId SingleArtistPage::artistId() const { return mArtistId; }
 
 const char *SingleArtistPage::scrollListName() const { return "tracklist"; }
 
@@ -91,4 +96,12 @@ QLabel *SingleArtistPage::name() {
 	}
 
 	return mName;
+}
+
+QPushButton *SingleArtistPage::albumButton() {
+	if (mAlbumButton == nullptr) {
+		mAlbumButton = findChild<QPushButton *>("viewAlbumButton");
+	}
+
+	return mAlbumButton;
 }

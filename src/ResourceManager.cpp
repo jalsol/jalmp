@@ -30,8 +30,7 @@ Artist* ResourceManager::getArtist(ArtistId id) {
 	}
 
 	QSqlQuery query(mDatabase);
-	query.prepare(
-		"SELECT name, cover_url, discography_id FROM artist WHERE id = :id");
+	query.prepare("SELECT name, cover_url FROM artist WHERE id = :id");
 	query.bindValue(":id", static_cast<qlonglong>(id));
 
 	if (!query.exec()) {
@@ -41,13 +40,11 @@ Artist* ResourceManager::getArtist(ArtistId id) {
 	if (query.next()) {
 		QString name = query.value(0).toString();
 		QString cover = query.value(1).toString();
-		PlaylistId discographyId = query.value(2).toLongLong();
 
 		Artist artist = ArtistBuilder()
 							.setId(id)
 							.setName(name)
 							.setCover(cover)
-							.setDiscography(discographyId)
 							.build();
 		mArtists.push_back(artist);
 
@@ -129,8 +126,9 @@ Playlist* ResourceManager::getPlaylist(PlaylistId id) {
 
 QList<Track*> ResourceManager::getTracksByPlaylist(PlaylistId playlistId) {
 	QSqlQuery query(mDatabase);
-	query.prepare(
-		"SELECT track_id FROM playlist_track WHERE playlist_id = :id");
+	query.prepare("SELECT track_id FROM playlist_track "
+				  "WHERE playlist_id = :id "
+				  "ORDER BY track_priority ASC");
 	query.bindValue(":id", static_cast<qlonglong>(playlistId));
 
 	QList<Track*> result;
@@ -146,7 +144,23 @@ QList<Track*> ResourceManager::getTracksByPlaylist(PlaylistId playlistId) {
 }
 
 QList<Track*> ResourceManager::getTracksByArtist(ArtistId artistId) {
-	return getTracksByPlaylist(getArtist(artistId)->discography());
+	QSqlQuery query(mDatabase);
+	query.prepare("SELECT a_t.track_id "
+				  "FROM artist_track a_t LEFT JOIN artist a "
+				  "ON a_t.artist_id = a.id "
+				  "WHERE a.id = :id");
+	query.bindValue(":id", static_cast<qlonglong>(artistId));
+
+	QList<Track*> result;
+
+	if (query.exec()) {
+		while (query.next()) {
+			TrackId id = query.value(0).toULongLong();
+			result.append(getTrack(id));
+		}
+	}
+
+	return result;
 }
 
 QList<Artist*> ResourceManager::getArtistsByTrack(TrackId trackId) {
@@ -212,7 +226,7 @@ QList<Entity*> ResourceManager::getEntitiesByKeyword(const QString& keyword) {
 	}
 
 	query.prepare("SELECT id FROM playlist "
-				  "WHERE name LIKE :keyword AND name NOT LIKE '%Discography%' "
+				  "WHERE name LIKE :keyword "
 				  "LIMIT :limit");
 	query.bindValue(":keyword", QString("%%1%").arg(keyword));
 	query.bindValue(":limit", remaining);
@@ -237,6 +251,41 @@ QList<Artist*> ResourceManager::getAllArtists() {
 		while (query.next()) {
 			ArtistId id = query.value(0).toULongLong();
 			result.append(getArtist(id));
+		}
+	}
+
+	return result;
+}
+
+QList<Playlist*> ResourceManager::getAllPlaylists() {
+	QSqlQuery query(mDatabase);
+	query.prepare("SELECT id FROM playlist");
+
+	QList<Playlist*> result;
+
+	if (query.exec()) {
+		while (query.next()) {
+			PlaylistId id = query.value(0).toULongLong();
+			result.append(getPlaylist(id));
+		}
+	}
+
+	return result;
+}
+
+QList<Playlist*> ResourceManager::getPlaylistsByArtist(ArtistId artistId) {
+	QSqlQuery query(mDatabase);
+	query.prepare("SELECT playlist_id FROM artist_playlist "
+				  "WHERE artist_id = :id "
+				  "ORDER BY playlist_priority ASC");
+	query.bindValue(":id", static_cast<qlonglong>(artistId));
+
+	QList<Playlist*> result;
+
+	if (query.exec()) {
+		while (query.next()) {
+			PlaylistId id = query.value(0).toULongLong();
+			result.append(getPlaylist(id));
 		}
 	}
 

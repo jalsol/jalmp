@@ -9,15 +9,10 @@
 class Artist : public Entity {
 public:
 	EntityType type() const override;
-	PlaylistId discography() const;
 
 private:
 	friend class ArtistBuilder;
 	friend class ResourceManager;
-
-	void setDiscography(PlaylistId discographyId);
-
-	PlaylistId mDiscographyId;
 };
 
 #endif // ARTIST_H

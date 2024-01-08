@@ -19,15 +19,13 @@ public:
 	Track* getTrack(TrackId id);
 	Playlist* getPlaylist(PlaylistId id);
 
-	// [[nodiscard]] bool saveArtist(Artist& artist);
-	// [[nodiscard]] bool 1saveTrack(Track& track);
-	// [[nodiscard]] bool savePlaylist(Playlist& playlist);
-
 	QList<Track*> getTracksByPlaylist(PlaylistId playlistId);
 	QList<Track*> getTracksByArtist(ArtistId artistId);
 	QList<Artist*> getArtistsByTrack(TrackId trackId);
 	QList<Entity*> getEntitiesByKeyword(const QString& keyword);
 	QList<Artist*> getAllArtists();
+	QList<Playlist*> getAllPlaylists();
+	QList<Playlist*> getPlaylistsByArtist(ArtistId artistId);
 
 private:
 	ResourceManager();
@@ -43,11 +41,6 @@ private:
 	std::list<Artist> mArtists;
 	std::list<Track> mTracks;
 	std::list<Playlist> mPlaylists;
-
-	// relations
-	// QList<QPair<ArtistId, TrackId>> mRelArtistTrack;
-	// QList<QPair<PlaylistId, TrackId>> mRelPlaylistTrack;
-	// QList<QPair<ArtistId, PlaylistId>> mRelArtistPlaylist;
 };
 
 #endif // RESOURCEMANAGER_HPP

@@ -1,6 +1,7 @@
 #include "SearchPage.hpp"
 
 #include "EntityListButton.hpp"
+#include "MediaQueue.hpp"
 #include "ResourceManager.hpp"
 
 #include <QDebug>
@@ -17,6 +18,17 @@ void SearchPage::fillList() {
 
 	ResourceManager &rm = ResourceManager::instance();
 	auto entities = rm.getEntitiesByKeyword(input);
+
+	auto tracks = [&entities]() {
+		QList<Track *> tracks;
+		for (auto *entity : entities) {
+			if (entity->type() == EntityType::Track) {
+				tracks.append(static_cast<Track *>(entity));
+			}
+		}
+		return tracks;
+	}();
+	MediaQueue::instance().setPlaylist(tracks);
 
 	QGridLayout *layout = new QGridLayout{scrollList()};
 	layout->setSpacing(0);

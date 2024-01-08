@@ -11,9 +11,6 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->setupUi(this);
 	player->init(this);
 
-	// coverArt.load("../../assets/cover/2.jpg");
-	// ui->coverLabel->setPixmap(coverArt.scaled(ui->coverLabel->size()));
-
 	connect(updater, SIGNAL(timeout()), this, SLOT(update()));
 
 	connect(ui->playButton, &QPushButton::clicked, this,
@@ -45,8 +42,6 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->sidebarTitle, &SidebarTitle::linkActivated, this,
 			&MainWindow::onSidebarTitleLinkActivated);
 
-	// connect(ui->searchInput, &QLineEdit::textChanged, ui->searchPage,
-	// 		&SearchPage::onSearchTextChanged);
 	connect(ui->searchGoButton, &QPushButton::clicked, ui->searchPage,
 			&SearchPage::onSearchButtonClicked);
 	connect(ui->searchInput, &QLineEdit::returnPressed, ui->searchPage,
@@ -58,6 +53,9 @@ MainWindow::MainWindow(QWidget *parent)
 			&MainWindow::onNavigatedToPlaylist);
 	connect(navigator, &Navigator::navigatedToTrack, this,
 			&MainWindow::onNavigatedToTrack);
+
+	connect(ui->viewAlbumButton, &QPushButton::clicked, this,
+			&MainWindow::onViewAlbumButtonClicked);
 }
 
 MainWindow::~MainWindow() {
@@ -121,12 +119,19 @@ void MainWindow::onSearchButtonClicked() {
 }
 
 void MainWindow::onPlaylistsButtonClicked() {
+	ui->playlistsPage->loadArtistPlaylists(ArtistId::Invalid);
 	ui->stackedWidget->setCurrentIndex(Playlists);
 }
 
 void MainWindow::onArtistsButtonClicked() {
 	ui->artistsPage->fillList();
 	ui->stackedWidget->setCurrentIndex(Artists);
+}
+
+void MainWindow::onViewAlbumButtonClicked() {
+	ArtistId artistID = ui->singleArtistPage->artistId();
+	ui->playlistsPage->loadArtistPlaylists(artistID);
+	ui->stackedWidget->setCurrentIndex(Playlists);
 }
 
 void MainWindow::onNavigatedToArtist(ArtistId artistId) {
