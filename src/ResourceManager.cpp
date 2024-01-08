@@ -10,7 +10,7 @@ ResourceManager::ResourceManager() {
 	mDatabase.setPort(3306);
 	mDatabase.setDatabaseName("jalmp");
 	mDatabase.setUserName("root");
-	mDatabase.setPassword(""password"");
+	mDatabase.setPassword("password");
 
 	Q_ASSERT(mDatabase.open());
 }
