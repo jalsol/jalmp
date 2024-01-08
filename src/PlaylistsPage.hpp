@@ -13,7 +13,7 @@ public:
 private:
 	const char *scrollListName() const override;
 
-	ArtistId mArtistId = ArtistId::Invalid;
+	ArtistId mArtistId = 0;
 };
 
 #endif // PLAYLISTSPAGE_HPP
