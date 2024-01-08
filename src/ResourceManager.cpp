@@ -4,13 +4,20 @@
 #include "PlaylistBuilder.hpp"
 #include "TrackBuilder.hpp"
 
+#include <fstream>
+
 ResourceManager::ResourceManager() {
+	std::ifstream file("../../config.txt");
+	std::string input;
+
 	mDatabase = QSqlDatabase::addDatabase("QMARIADB");
 	mDatabase.setHostName("localhost");
 	mDatabase.setPort(3306);
 	mDatabase.setDatabaseName("jalmp");
 	mDatabase.setUserName("root");
-	mDatabase.setPassword("password");
+
+	file >> input;
+	mDatabase.setPassword(input.c_str());
 
 	Q_ASSERT(mDatabase.open());
 }
