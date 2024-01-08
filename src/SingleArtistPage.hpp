@@ -1,30 +1,28 @@
 #ifndef SINGLEARTISTPAGE_HPP
 #define SINGLEARTISTPAGE_HPP
 
+#include "Page.hpp"
 #include "Types.hpp"
 
 #include <QLabel>
 #include <QPixmap>
 #include <QWidget>
 
-class SingleArtistPage : public QWidget {
-	Q_OBJECT
+class SingleArtistPage : public Page {
 public:
 	SingleArtistPage(QWidget *parent = nullptr);
-
 	void loadArtist(ArtistId artistId);
 
 private:
-	void clearList();
-	QWidget *tracklist();
+	void fillList() override;
+	const char *scrollListName() const override;
+
 	QLabel *cover();
 	QLabel *name();
 
 	QPixmap mPixmap;
 	ArtistId mArtistId = ArtistId::Invalid;
 
-	// DO NOT USE THESE DIRECTLY, USE THEIR GETTERS INSTEAD
-	QWidget *mTracklist = nullptr;
 	QLabel *mCover = nullptr;
 	QLabel *mName = nullptr;
 };

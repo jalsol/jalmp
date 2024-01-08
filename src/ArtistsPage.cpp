@@ -5,7 +5,7 @@
 
 #include <QGridLayout>
 
-ArtistsPage::ArtistsPage(QWidget *parent) : QWidget{parent} {}
+ArtistsPage::ArtistsPage(QWidget *parent) : Page{parent} {}
 
 void ArtistsPage::fillList() {
 	if (mFilled) {
@@ -36,11 +36,3 @@ void ArtistsPage::fillList() {
 }
 
 const char *ArtistsPage::scrollListName() const { return "artistslist"; }
-
-QWidget *ArtistsPage::scrollList() {
-	if (!mScrollList) {
-		mScrollList = findChild<QWidget *>(scrollListName());
-	}
-
-	return mScrollList;
-}

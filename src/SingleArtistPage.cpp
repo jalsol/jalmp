@@ -8,18 +8,11 @@
 #include <QLabel>
 #include <QList>
 
-SingleArtistPage::SingleArtistPage(QWidget *parent) : QWidget(parent) {}
+SingleArtistPage::SingleArtistPage(QWidget *parent) : Page(parent) {}
 
-void SingleArtistPage::loadArtist(ArtistId artistId) {
-	if (artistId == mArtistId) {
-		return;
-	}
-
-	mArtistId = artistId;
-	clearList();
-
+void SingleArtistPage::fillList() {
 	ResourceManager &rm = ResourceManager::instance();
-	Artist *artist = rm.getArtist(artistId);
+	Artist *artist = rm.getArtist(mArtistId);
 	Q_ASSERT(artist != nullptr);
 
 	// load cover and set name
@@ -29,8 +22,8 @@ void SingleArtistPage::loadArtist(ArtistId artistId) {
 	name()->setText(artist->name());
 
 	// display tracks in the QScrollArea
-	QList<Track *> tracks = rm.getTracksByArtist(artistId);
-	QGridLayout *layout = new QGridLayout{tracklist()};
+	QList<Track *> tracks = rm.getTracksByArtist(mArtistId);
+	QGridLayout *layout = new QGridLayout{scrollList()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
 
@@ -64,35 +57,25 @@ void SingleArtistPage::loadArtist(ArtistId artistId) {
 		++row;
 	}
 
-	layout->setRowStretch(row - 1, 1);
+	if (row > 0) {
+		layout->setRowStretch(row - 1, 1);
+	}
 
 	// set the scroll area's widget
-	tracklist()->setLayout(layout);
+	scrollList()->setLayout(layout);
 }
 
-void SingleArtistPage::clearList() {
-	QLayout *layout = tracklist()->layout();
-
-	if (layout == nullptr) {
+void SingleArtistPage::loadArtist(ArtistId artistId) {
+	if (artistId == mArtistId) {
 		return;
 	}
 
-	QLayoutItem *item;
-	while ((item = layout->takeAt(0)) != nullptr) {
-		delete item->widget();
-		delete item;
-	}
-
-	delete layout;
+	mArtistId = artistId;
+	clearList();
+	fillList();
 }
 
-QWidget *SingleArtistPage::tracklist() {
-	if (mTracklist == nullptr) {
-		mTracklist = findChild<QWidget *>("tracklist");
-	}
-
-	return mTracklist;
-}
+const char *SingleArtistPage::scrollListName() const { return "tracklist"; }
 
 QLabel *SingleArtistPage::cover() {
 	if (mCover == nullptr) {

@@ -1,27 +1,25 @@
 #ifndef SEARCHPAGE_HPP
 #define SEARCHPAGE_HPP
 
+#include "Page.hpp"
+
 #include <QLineEdit>
 #include <QObject>
 #include <QWidget>
 
-class SearchPage : public QWidget {
-	Q_OBJECT
+class SearchPage : public Page {
 public:
 	SearchPage(QWidget *parent = nullptr);
+	void fillList() override;
 
 public slots:
-	void onSearchTextChanged(const QString &text);
 	void onSearchButtonClicked();
 
 private:
-	QLineEdit *searchInput();
-	void clearList();
-	QWidget *searchlist();
+	const char *scrollListName() const override;
 
-	// DO NOT USE THESE DIRECTLY, USE THEIR GETTERS INSTEAD
+	QLineEdit *searchInput();
 	QLineEdit *mSearchInput = nullptr;
-	QWidget *mSearchList = nullptr;
 };
 
 #endif // SEARCHPAGE_HPP

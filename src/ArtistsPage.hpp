@@ -1,21 +1,15 @@
 #ifndef ARTISTSPAGE_HPP
 #define ARTISTSPAGE_HPP
 
-#include <QWidget>
+#include "Page.hpp"
 
-class ArtistsPage : public QWidget {
-	Q_OBJECT
+class ArtistsPage : public Page {
 public:
 	ArtistsPage(QWidget *parent = nullptr);
-
-public:
-	void fillList();
+	void fillList() override;
 
 private:
-	const char *scrollListName() const;
-	QWidget *scrollList();
-
-	QWidget *mScrollList = nullptr;
+	const char *scrollListName() const override;
 	bool mFilled = false;
 };
 

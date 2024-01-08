@@ -7,20 +7,9 @@
 #include <QGridLayout>
 #include <QLabel>
 
-SearchPage::SearchPage(QWidget *parent) : QWidget{parent} {}
+SearchPage::SearchPage(QWidget *parent) : Page{parent} {}
 
-QLineEdit *SearchPage::searchInput() {
-	if (!mSearchInput) {
-		mSearchInput = findChild<QLineEdit *>("searchInput");
-	}
-	return mSearchInput;
-}
-
-void SearchPage::onSearchTextChanged(const QString &text) { qDebug() << text; }
-
-void SearchPage::onSearchButtonClicked() {
-	clearList();
-
+void SearchPage::fillList() {
 	const auto &input = searchInput()->text();
 	if (input.isEmpty()) {
 		return;
@@ -29,7 +18,7 @@ void SearchPage::onSearchButtonClicked() {
 	ResourceManager &rm = ResourceManager::instance();
 	auto entities = rm.getEntitiesByKeyword(input);
 
-	QGridLayout *layout = new QGridLayout{searchlist()};
+	QGridLayout *layout = new QGridLayout{scrollList()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
 
@@ -56,29 +45,19 @@ void SearchPage::onSearchButtonClicked() {
 	}
 
 	// set the scroll area's widget
-	searchlist()->setLayout(layout);
+	scrollList()->setLayout(layout);
 }
 
-void SearchPage::clearList() {
-	QLayout *layout = searchlist()->layout();
-
-	if (layout == nullptr) {
-		return;
-	}
-
-	QLayoutItem *item;
-	while ((item = layout->takeAt(0)) != nullptr) {
-		delete item->widget();
-		delete item;
-	}
-
-	delete layout;
+void SearchPage::onSearchButtonClicked() {
+	clearList();
+	fillList();
 }
 
-QWidget *SearchPage::searchlist() {
-	if (mSearchList == nullptr) {
-		mSearchList = findChild<QWidget *>("searchlist");
-	}
+const char *SearchPage::scrollListName() const { return "searchlist"; }
 
-	return mSearchList;
+QLineEdit *SearchPage::searchInput() {
+	if (!mSearchInput) {
+		mSearchInput = findChild<QLineEdit *>("searchInput");
+	}
+	return mSearchInput;
 }
