@@ -11,9 +11,6 @@ public:
 	MediaSlider(Qt::Orientation, QWidget *parent = nullptr);
 	MediaSlider(QWidget *parent = nullptr);
 
-	// signals:
-	//	void clicked(bool checked = false);
-
 protected:
 	void mousePressEvent(QMouseEvent *event) override;
 };

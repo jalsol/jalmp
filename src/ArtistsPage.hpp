@@ -11,7 +11,6 @@ public:
 private:
 	const char *scrollListName() const override;
 
-	QWidget *mScrollList = nullptr;
 	bool mFilled = false;
 };
 

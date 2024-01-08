@@ -2,7 +2,6 @@
 #define ARTIST_H
 
 #include "Entity.hpp"
-#include "Types.hpp"
 
 #include <QString>
 
