@@ -11,7 +11,6 @@ public:
 	SearchPage(QWidget *parent = nullptr);
 
 public slots:
-	// void onSearchButtonClicked();
 	void onSearchTextChanged(const QString &text);
 	void onSearchButtonClicked();
 

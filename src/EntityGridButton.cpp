@@ -1,23 +1,22 @@
-#include "EntityListButton.hpp"
+#include "EntityGridButton.hpp"
 
-#include <QHBoxLayout>
 #include <QLabel>
-#include <QPixmap>
+#include <QVBoxLayout>
 
-EntityListButton::EntityListButton(QWidget *parent) : EntityButton(parent) {}
+EntityGridButton::EntityGridButton(QWidget *parent) : EntityButton(parent) {}
 
-EntityListButton::EntityListButton(Entity *entity, PlaylistId playlistId,
+EntityGridButton::EntityGridButton(Entity *entity, PlaylistId playlistId,
 								   QWidget *parent)
 	: EntityButton(entity, playlistId, parent) {
-	auto layout = new QHBoxLayout(this);
+	auto layout = new QVBoxLayout(this);
 
 	// load cover image
 	QPixmap pixmap;
 	pixmap.load("../../" + entity->cover());
 	auto *cover = new QLabel();
 	cover->setPixmap(
-		pixmap.scaled(35, 35, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-	cover->setFixedWidth(50);
+		pixmap.scaled(180, 180, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	cover->setFixedWidth(200);
 	layout->addWidget(cover);
 
 	// load text
@@ -27,5 +26,6 @@ EntityListButton::EntityListButton(Entity *entity, PlaylistId playlistId,
 	layout->addWidget(label);
 
 	setLayout(layout);
-	setFixedHeight(50);
+	setFixedHeight(230);
+	setFixedWidth(200);
 }

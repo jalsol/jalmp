@@ -226,3 +226,19 @@ QList<Entity*> ResourceManager::getEntitiesByKeyword(const QString& keyword) {
 
 	return result;
 }
+
+QList<Artist*> ResourceManager::getAllArtists() {
+	QSqlQuery query(mDatabase);
+	query.prepare("SELECT id FROM artist");
+
+	QList<Artist*> result;
+
+	if (query.exec()) {
+		while (query.next()) {
+			ArtistId id = query.value(0).toULongLong();
+			result.append(getArtist(id));
+		}
+	}
+
+	return result;
+}

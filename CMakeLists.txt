@@ -43,6 +43,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 		src/Types.cpp
 		src/MediaQueue.hpp src/MediaQueue.cpp
 		src/Navigator.hpp src/Navigator.cpp
+		src/EntityButton.hpp src/EntityButton.cpp
+		src/EntityGridButton.hpp src/EntityGridButton.cpp
+		src/ArtistsPage.hpp src/ArtistsPage.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET jalmp APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

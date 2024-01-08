@@ -125,6 +125,7 @@ void MainWindow::onPlaylistsButtonClicked() {
 }
 
 void MainWindow::onArtistsButtonClicked() {
+	ui->artistsPage->fillList();
 	ui->stackedWidget->setCurrentIndex(Artists);
 }
 

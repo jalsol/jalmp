@@ -1,7 +1,7 @@
 #ifndef SIDEBARTITLE_HPP
 #define SIDEBARTITLE_HPP
 
-#include "Track.hpp"
+#include "Types.hpp"
 
 #include <QLabel>
 

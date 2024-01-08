@@ -24,10 +24,10 @@ public:
 	// [[nodiscard]] bool savePlaylist(Playlist& playlist);
 
 	QList<Track*> getTracksByPlaylist(PlaylistId playlistId);
-
 	QList<Track*> getTracksByArtist(ArtistId artistId);
 	QList<Artist*> getArtistsByTrack(TrackId trackId);
 	QList<Entity*> getEntitiesByKeyword(const QString& keyword);
+	QList<Artist*> getAllArtists();
 
 private:
 	ResourceManager();
