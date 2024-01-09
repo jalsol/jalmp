@@ -74,7 +74,6 @@ MainWindow::MainWindow(QWidget *parent)
 	}
 	{
 		QPixmap goButton("../../assets/1C1998.png");
-		ui->homeSearchGoButton->setIcon(goButton);
 		ui->searchGoButton->setIcon(goButton);
 	}
 	ui->sidebarFavButton->setVisible(false);

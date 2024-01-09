@@ -54,41 +54,13 @@
      <number>0</number>
     </property>
     <widget class="HomePage" name="homePage">
-     <widget class="QPushButton" name="homeSearchGoButton">
-      <property name="geometry">
-       <rect>
-        <x>270</x>
-        <y>10</y>
-        <width>30</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="homeSearchInput">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>250</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-     </widget>
      <widget class="QScrollArea" name="userQueueListArea">
       <property name="geometry">
        <rect>
         <x>521</x>
-        <y>80</y>
+        <y>40</y>
         <width>501</width>
-        <height>231</height>
+        <height>261</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -106,7 +78,7 @@
          <x>0</x>
          <y>0</y>
          <width>499</width>
-         <height>229</height>
+         <height>259</height>
         </rect>
        </property>
       </widget>
@@ -144,7 +116,7 @@
       <property name="geometry">
        <rect>
         <x>520</x>
-        <y>60</y>
+        <y>10</y>
         <width>101</width>
         <height>18</height>
        </rect>
@@ -163,7 +135,7 @@
       <property name="geometry">
        <rect>
         <x>520</x>
-        <y>320</y>
+        <y>310</y>
         <width>121</width>
         <height>18</height>
        </rect>
@@ -182,7 +154,7 @@
       <property name="geometry">
        <rect>
         <x>9</x>
-        <y>60</y>
+        <y>10</y>
         <width>101</width>
         <height>18</height>
        </rect>
@@ -201,9 +173,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
+        <y>40</y>
         <width>501</width>
-        <height>561</height>
+        <height>601</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -221,7 +193,7 @@
          <x>0</x>
          <y>0</y>
          <width>499</width>
-         <height>559</height>
+         <height>599</height>
         </rect>
        </property>
       </widget>
