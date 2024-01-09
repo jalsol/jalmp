@@ -210,12 +210,12 @@ QList<Entity*> ResourceManager::getEntitiesByKeyword(const QString& keyword) {
 	}
 
 	// get tracks
-	query.prepare(
-		"SELECT t.id "
-		"FROM artist_track a_t "
-		"INNER JOIN track t ON a_t.track_id = t.id "
-		"INNER JOIN artist a ON a_t.artist_id = a.id "
-		"WHERE t.title LIKE :keyword OR a.name LIKE :keyword LIMIT :limit");
+	query.prepare("SELECT t.id "
+				  "FROM artist_track a_t "
+				  "INNER JOIN track t ON a_t.track_id = t.id "
+				  "INNER JOIN artist a ON a_t.artist_id = a.id "
+				  "WHERE t.title LIKE :keyword OR a.name LIKE :keyword "
+				  "GROUP BY t.id LIMIT :limit");
 	query.bindValue(":keyword", QString("%%1%").arg(keyword));
 	query.bindValue(":limit", remaining);
 
