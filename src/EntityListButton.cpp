@@ -13,11 +13,11 @@ EntityListButton::EntityListButton(Entity *entity, PlaylistId playlistId,
 
 	// load cover image
 	QPixmap pixmap;
-	pixmap.load("../../" + entity->cover());
+	pixmap.load("../.." + entity->cover());
 	auto *cover = new QLabel();
 	cover->setPixmap(
-		pixmap.scaled(35, 35, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-	cover->setFixedWidth(50);
+		pixmap.scaled(30, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	cover->setFixedWidth(35);
 	layout->addWidget(cover);
 
 	// load text
@@ -26,6 +26,9 @@ EntityListButton::EntityListButton(Entity *entity, PlaylistId playlistId,
 	label->setAlignment(Qt::AlignCenter);
 	layout->addWidget(label);
 
+	layout->setSpacing(0);
+	layout->setContentsMargins(5, 5, 5, 5);
+
 	setLayout(layout);
-	setFixedHeight(50);
+	setFixedHeight(35);
 }

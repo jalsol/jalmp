@@ -1,6 +1,7 @@
 #include "SearchPage.hpp"
 
 #include "EntityListButton.hpp"
+#include "IndexLabel.hpp"
 #include "MediaQueue.hpp"
 #include "ResourceManager.hpp"
 
@@ -53,14 +54,16 @@ void SearchListCapture::fill() {
 
 	int row = 0;
 	for (auto *entity : entities) {
-		auto *idLabel = new QLabel();
-		idLabel->setText(QString::number(row + 1));
-		idLabel->setFixedSize(50, 50);
-		idLabel->setAlignment(Qt::AlignCenter);
-		layout->addWidget(idLabel, row, 0, Qt::AlignTop);
+		int col = 0;
+		{
+			auto *idLabel = new IndexLabel(row + 1);
+			layout->addWidget(idLabel, row, col++, Qt::AlignTop);
+		}
 
-		auto *trackButton = new EntityListButton(entity);
-		layout->addWidget(trackButton, row, 1, Qt::AlignTop);
+		{
+			auto *trackButton = new EntityListButton(entity);
+			layout->addWidget(trackButton, row, col++, Qt::AlignTop);
+		}
 
 		++row;
 	}

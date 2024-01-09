@@ -1,7 +1,9 @@
 #include "TrackListPage.hpp"
 
+#include "DurationLabel.hpp"
 #include "EntityListButton.hpp"
 #include "FavoriteButton.hpp"
+#include "IndexLabel.hpp"
 #include "MediaQueue.hpp"
 #include "ResourceManager.hpp"
 
@@ -41,20 +43,15 @@ void TrackListCapture::fill() {
 
 	int row = 0;
 	for (auto *track : tracks) {
+		int col = 0;
 		{
-			auto *idLabel = new QLabel();
-			idLabel->setText(QString::number(row + 1));
-			idLabel->setFixedSize(20, 50);
-			idLabel->setAlignment(Qt::AlignCenter);
-			layout->addWidget(idLabel, row, 0, Qt::AlignTop);
+			auto *idLabel = new IndexLabel(row + 1);
+			layout->addWidget(idLabel, row, col++, Qt::AlignTop);
 		}
 
 		{
-			auto *durationLabel = new QLabel();
-			durationLabel->setText(track->duration().toString("mm:ss"));
-			durationLabel->setFixedSize(50, 50);
-			durationLabel->setAlignment(Qt::AlignCenter);
-			layout->addWidget(durationLabel, row, 1, Qt::AlignTop);
+			auto *durationLabel = new DurationLabel(track->duration());
+			layout->addWidget(durationLabel, row, col++, Qt::AlignTop);
 		}
 
 		{
@@ -64,13 +61,13 @@ void TrackListCapture::fill() {
 			} else {
 				trackButton = new EntityListButton(track);
 			}
-			layout->addWidget(trackButton, row, 2, Qt::AlignTop);
+			layout->addWidget(trackButton, row, col++, Qt::AlignTop);
 		}
 
 		{
 			auto *favoriteButton =
 				new FavoriteButton((qint64)track->id(), track->isFavorite());
-			layout->addWidget(favoriteButton, row, 3, Qt::AlignTop);
+			layout->addWidget(favoriteButton, row, col++, Qt::AlignTop);
 		}
 
 		++row;

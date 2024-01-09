@@ -1,9 +1,14 @@
 #include "HomePage.hpp"
 
+#include "DeleteQueueButton.hpp"
+#include "DownQueueButton.hpp"
+#include "DurationLabel.hpp"
 #include "EntityListButton.hpp"
 #include "FavoriteButton.hpp"
+#include "IndexLabel.hpp"
 #include "MediaQueue.hpp"
 #include "ResourceManager.hpp"
+#include "UpQueueButton.hpp"
 
 #include <QGridLayout>
 #include <QLabel>
@@ -30,52 +35,42 @@ void QueueListCapture::fill() {
 
 	int row = 0;
 	for (Track *track : mQueue) {
+		int col = 0;
+
 		{
-			auto *idLabel = new QLabel();
-			idLabel->setText(QString::number(row + 1));
-			idLabel->setFixedSize(20, 50);
-			idLabel->setAlignment(Qt::AlignCenter);
-			layout->addWidget(idLabel, row, 0, Qt::AlignTop);
+			auto *idLabel = new IndexLabel(row + 1);
+			layout->addWidget(idLabel, row, col++, Qt::AlignTop);
 		}
 
 		{
-			auto *durationLabel = new QLabel();
-			durationLabel->setText(track->duration().toString("mm:ss"));
-			durationLabel->setFixedSize(50, 50);
-			durationLabel->setAlignment(Qt::AlignCenter);
-			layout->addWidget(durationLabel, row, 1, Qt::AlignTop);
+			auto *durationLabel = new DurationLabel(track->duration());
+			layout->addWidget(durationLabel, row, col++, Qt::AlignTop);
 		}
 
 		{
 			auto *button = new EntityListButton(track);
-			layout->addWidget(button, row, 2, Qt::AlignTop);
+			layout->addWidget(button, row, col++, Qt::AlignTop);
 		}
 
 		{
 			auto *favoriteButton =
 				new FavoriteButton((qint64)track->id(), track->isFavorite());
-			layout->addWidget(favoriteButton, row, 3, Qt::AlignTop);
+			layout->addWidget(favoriteButton, row, col++, Qt::AlignTop);
 		}
 
 		{
-			auto *deleteButton = new QPushButton();
-			deleteButton->setText("Del");
-			deleteButton->setFixedSize(50, 50);
-			layout->addWidget(deleteButton, row, 4, Qt::AlignTop);
+			auto *deleteButton = new DeleteQueueButton((qint64)track->id());
+			layout->addWidget(deleteButton, row, col++, Qt::AlignTop);
 		}
 
 		{
-			auto *upButton = new QPushButton();
-			upButton->setText("Up");
-			upButton->setFixedSize(50, 50);
-			layout->addWidget(upButton, row, 5, Qt::AlignTop);
+			auto *upButton = new UpQueueButton((qint64)track->id());
+			layout->addWidget(upButton, row, col++, Qt::AlignTop);
 		}
 
 		{
-			auto *downButton = new QPushButton();
-			downButton->setText("Down");
-			downButton->setFixedSize(50, 50);
-			layout->addWidget(downButton, row, 6, Qt::AlignTop);
+			auto *downButton = new DownQueueButton((qint64)track->id());
+			layout->addWidget(downButton, row, col++, Qt::AlignTop);
 		}
 
 		++row;
@@ -117,18 +112,12 @@ void FavoriteListCapture::fill() {
 		int col = 0;
 
 		{
-			auto *idLabel = new QLabel();
-			idLabel->setText(QString::number(row + 1));
-			idLabel->setFixedSize(20, 50);
-			idLabel->setAlignment(Qt::AlignCenter);
+			auto *idLabel = new IndexLabel(row + 1);
 			layout->addWidget(idLabel, row, col++, Qt::AlignTop);
 		}
 
 		{
-			auto *durationLabel = new QLabel();
-			durationLabel->setText(track->duration().toString("mm:ss"));
-			durationLabel->setFixedSize(50, 50);
-			durationLabel->setAlignment(Qt::AlignCenter);
+			auto *durationLabel = new DurationLabel(track->duration());
 			layout->addWidget(durationLabel, row, col++, Qt::AlignTop);
 		}
 

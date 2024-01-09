@@ -25,6 +25,9 @@ private slots:
 	void onSeekbarReleased();
 	void onVolumeValueChanged(int value);
 	void onRepeatButtonClicked();
+	void onShuffleButtonClicked();
+	void onStopButtonClicked();
+	void onMuteButtonClicked();
 
 	void onHomeButtonClicked();
 	void onSearchButtonClicked();
@@ -33,7 +36,7 @@ private slots:
 	void onViewOriginButtonClicked();
 
 	void onSidebarTitleLinkActivated(const QString &link);
-	void resetCheckSidebarButtons();
+	// void resetCheckSidebarButtons();
 
 	void onNavigatedToArtist(ArtistId artistId);
 	void onNavigatedToPlaylist(PlaylistId playlistId);

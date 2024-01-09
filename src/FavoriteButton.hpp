@@ -12,6 +12,9 @@ public:
 	FavoriteButton(TrackId trackId, bool favorite = false,
 				   QWidget *parent = nullptr);
 
+	void setTrackId(TrackId trackId);
+	void setFavorite(bool favorite);
+
 public slots:
 	void toggleFavorite();
 

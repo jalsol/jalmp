@@ -44,6 +44,12 @@
       <height>650</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
@@ -58,7 +64,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Go</string>
+       <string/>
       </property>
      </widget>
      <widget class="QLineEdit" name="homeSearchInput">
@@ -268,7 +274,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Go</string>
+       <string/>
       </property>
      </widget>
      <widget class="QScrollArea" name="searchListArea">
@@ -512,7 +518,7 @@
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>660</y>
+      <y>653</y>
       <width>500</width>
       <height>16</height>
      </rect>
@@ -530,53 +536,71 @@
    <widget class="QPushButton" name="playButton">
     <property name="geometry">
      <rect>
-      <x>625</x>
-      <y>680</y>
-      <width>30</width>
-      <height>30</height>
+      <x>613</x>
+      <y>665</y>
+      <width>52</width>
+      <height>52</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(../../assets/4C9F00.png);</string>
+    </property>
     <property name="text">
-     <string>|&gt;</string>
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>38</width>
+      <height>38</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="nextButton">
     <property name="geometry">
      <rect>
-      <x>695</x>
-      <y>680</y>
-      <width>30</width>
+      <x>662</x>
+      <y>675</y>
+      <width>51</width>
       <height>30</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(../../assets/1E25C0.png);</string>
+    </property>
     <property name="text">
-     <string>&gt;&gt;</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="prevButton">
     <property name="geometry">
      <rect>
-      <x>555</x>
-      <y>680</y>
-      <width>30</width>
+      <x>565</x>
+      <y>675</y>
+      <width>51</width>
       <height>30</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(../../assets/1E1E48.png);</string>
+    </property>
     <property name="text">
-     <string>&lt;&lt;</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="shuffleButton">
     <property name="geometry">
      <rect>
-      <x>485</x>
-      <y>680</y>
+      <x>450</x>
+      <y>676</y>
       <width>30</width>
       <height>30</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(../../assets/1D2230.png);</string>
+    </property>
     <property name="text">
-     <string>Rd</string>
+     <string/>
     </property>
     <property name="checkable">
      <bool>true</bool>
@@ -585,14 +609,17 @@
    <widget class="QPushButton" name="repeatButton">
     <property name="geometry">
      <rect>
-      <x>765</x>
-      <y>680</y>
+      <x>485</x>
+      <y>676</y>
       <width>30</width>
       <height>30</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(../../assets/1D3C68.png);</string>
+    </property>
     <property name="text">
-     <string>Re</string>
+     <string/>
     </property>
     <property name="checkable">
      <bool>true</bool>
@@ -603,7 +630,7 @@
      <rect>
       <x>29</x>
       <y>660</y>
-      <width>331</width>
+      <width>211</width>
       <height>50</height>
      </rect>
     </property>
@@ -622,9 +649,9 @@
    <widget class="MediaSlider" name="volume">
     <property name="geometry">
      <rect>
-      <x>1170</x>
-      <y>677</y>
-      <width>100</width>
+      <x>758</x>
+      <y>683</y>
+      <width>71</width>
       <height>16</height>
      </rect>
     </property>
@@ -641,14 +668,17 @@
    <widget class="QPushButton" name="muteButton">
     <property name="geometry">
      <rect>
-      <x>1130</x>
-      <y>670</y>
+      <x>725</x>
+      <y>675</y>
       <width>30</width>
       <height>30</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(../../assets/4B9660.png);</string>
+    </property>
     <property name="text">
-     <string>Mu</string>
+     <string/>
     </property>
     <property name="checkable">
      <bool>true</bool>
@@ -742,7 +772,7 @@
      <rect>
       <x>70</x>
       <y>-10</y>
-      <width>241</width>
+      <width>121</width>
       <height>111</height>
      </rect>
     </property>
@@ -754,10 +784,119 @@
       <kerning>true</kerning>
      </font>
     </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
     <property name="text">
      <string> jalmp</string>
     </property>
    </widget>
+   <widget class="QLabel" name="background">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1280</width>
+      <height>720</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../assets/background.jpeg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="controlLabel">
+    <property name="geometry">
+     <rect>
+      <x>531</x>
+      <y>665</y>
+      <width>181</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(../../assets/control.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>:/assets/control.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QLabel" name="controlFrameLabel">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>665</y>
+      <width>558</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(../../assets/control_frame.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>:/assets/control_frame.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stopButton">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>675</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(../../assets/1CA418.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="FavoriteButton" name="sidebarFavButton">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>670</y>
+      <width>35</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>background</zorder>
+   <zorder>stackedWidget</zorder>
+   <zorder>verticalLine</zorder>
+   <zorder>horizontalLine</zorder>
+   <zorder>seekbar</zorder>
+   <zorder>sidebarTitle</zorder>
+   <zorder>coverLabel</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>appLabel</zorder>
+   <zorder>controlFrameLabel</zorder>
+   <zorder>controlLabel</zorder>
+   <zorder>volume</zorder>
+   <zorder>playButton</zorder>
+   <zorder>muteButton</zorder>
+   <zorder>prevButton</zorder>
+   <zorder>nextButton</zorder>
+   <zorder>repeatButton</zorder>
+   <zorder>shuffleButton</zorder>
+   <zorder>stopButton</zorder>
+   <zorder>sidebarFavButton</zorder>
   </widget>
  </widget>
  <customwidgets>
@@ -800,6 +939,11 @@
    <extends>QWidget</extends>
    <header>HomePage.hpp</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FavoriteButton</class>
+   <extends>QPushButton</extends>
+   <header>FavoriteButton.hpp</header>
   </customwidget>
  </customwidgets>
  <resources/>

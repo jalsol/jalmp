@@ -54,6 +54,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 		src/ScrollListCapture.hpp src/ScrollListCapture.cpp
 		src/WidgetCapture.hpp
 		src/WidgetCapture.cpp
+
+		src/DeleteQueueButton.hpp src/DeleteQueueButton.cpp
+		src/UpQueueButton.hpp src/UpQueueButton.cpp
+		src/DownQueueButton.hpp src/DownQueueButton.cpp
+		src/DurationLabel.hpp src/DurationLabel.cpp
+		src/IndexLabel.hpp src/IndexLabel.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET jalmp APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

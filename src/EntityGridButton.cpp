@@ -12,7 +12,7 @@ EntityGridButton::EntityGridButton(Entity *entity, PlaylistId playlistId,
 
 	// load cover image
 	QPixmap pixmap;
-	pixmap.load("../../" + entity->cover());
+	pixmap.load("../.." + entity->cover());
 	auto *cover = new QLabel();
 	cover->setPixmap(
 		pixmap.scaled(180, 180, Qt::KeepAspectRatio, Qt::SmoothTransformation));
