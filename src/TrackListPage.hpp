@@ -2,33 +2,45 @@
 #define TRACKLISTPAGE_HPP
 
 #include "Page.hpp"
+#include "ScrollListCapture.hpp"
 #include "Types.hpp"
+#include "WidgetCapture.hpp"
 
 #include <QLabel>
 #include <QPair>
 #include <QPushButton>
 
-class TrackListPage : public Page {
+class TrackListCapture : public ScrollListCapture {
 public:
-	TrackListPage(QWidget *parent = nullptr);
+	TrackListCapture(QWidget *parent = nullptr);
+	TrackListCapture(const QString &capture, QWidget *parent = nullptr);
+
 	void loadTrackFrom(EntityId id, EntityType type);
 	QPair<EntityId, EntityType> id() const;
 
 private:
-	void fillList() override;
-	const char *scrollListName() const override;
-
-	QLabel *cover();
-	QLabel *name();
-	QPushButton *viewOrigin();
-
-	QPixmap mPixmap;
+	void fill() override;
 	EntityId mId;
 	EntityType mType;
+};
 
-	QLabel *mCover = nullptr;
-	QLabel *mName = nullptr;
-	QPushButton *mViewOrigin = nullptr;
+class TrackListPage : public Page {
+public:
+	TrackListPage(QWidget *parent = nullptr);
+	void fill(EntityId id, EntityType type);
+	QPair<EntityId, EntityType> id() const;
+	void reload();
+
+private:
+	using LabelCapture = WidgetCapture<QLabel>;
+	using ButtonCapture = WidgetCapture<QPushButton>;
+
+	TrackListCapture mList = TrackListCapture("tracklist", this);
+	LabelCapture mCover = LabelCapture("tracklistCoverLabel", this);
+	LabelCapture mName = LabelCapture("tracklistNameLabel", this);
+	ButtonCapture mOrigin = ButtonCapture("viewTracklistOrigin", this);
+
+	QPixmap mPixmap;
 };
 
 #endif // TRACKLISTPAGE_HPP

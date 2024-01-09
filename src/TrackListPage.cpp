@@ -1,31 +1,37 @@
 #include "TrackListPage.hpp"
 
 #include "EntityListButton.hpp"
+#include "FavoriteButton.hpp"
 #include "MediaQueue.hpp"
 #include "ResourceManager.hpp"
 
 #include <QGridLayout>
 
-TrackListPage::TrackListPage(QWidget *parent) : Page(parent) {}
+TrackListCapture::TrackListCapture(QWidget *parent)
+	: ScrollListCapture(parent) {}
 
-void TrackListPage::fillList() {
+TrackListCapture::TrackListCapture(const QString &name, QWidget *parent)
+	: ScrollListCapture(name, parent) {}
+
+void TrackListCapture::loadTrackFrom(EntityId id, EntityType type) {
+	if (mId == id && mType == type) {
+		return;
+	}
+
+	mId = id;
+	mType = type;
+	reload();
+}
+
+void TrackListCapture::fill() {
 	ResourceManager &rm = ResourceManager::instance();
-	Entity *entity = (mType == EntityType::Playlist)
-						 ? (Entity *)rm.getPlaylist((qint64)mId)
-						 : (Entity *)rm.getArtist((qint64)mId);
 
-	// load cover and set name
-	mPixmap.load("../../" + entity->cover());
-	cover()->setPixmap(mPixmap.scaled(200, 200, Qt::KeepAspectRatio,
-									  Qt::SmoothTransformation));
-	name()->setText(entity->name());
-
-	// display tracks in the QScrollArea
 	QList<Track *> tracks = (mType == EntityType::Playlist)
 								? rm.getTracksByPlaylist((qint64)mId)
 								: rm.getTracksByArtist((qint64)mId);
 	MediaQueue::instance().setPlaylist(tracks);
-	QGridLayout *layout = new QGridLayout{scrollList()};
+
+	QGridLayout *layout = new QGridLayout{get()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
 
@@ -35,31 +41,37 @@ void TrackListPage::fillList() {
 
 	int row = 0;
 	for (auto *track : tracks) {
-		auto *idLabel = new QLabel();
-		idLabel->setText(QString::number(row + 1));
-		idLabel->setFixedSize(50, 50);
-		idLabel->setAlignment(Qt::AlignCenter);
-		layout->addWidget(idLabel, row, 0, Qt::AlignTop);
-
-		EntityListButton *trackButton;
-		if (mType == EntityType::Playlist) {
-			trackButton = new EntityListButton(track, (qint64)mId);
-		} else {
-			trackButton = new EntityListButton(track);
+		{
+			auto *idLabel = new QLabel();
+			idLabel->setText(QString::number(row + 1));
+			idLabel->setFixedSize(20, 50);
+			idLabel->setAlignment(Qt::AlignCenter);
+			layout->addWidget(idLabel, row, 0, Qt::AlignTop);
 		}
-		layout->addWidget(trackButton, row, 1, Qt::AlignTop);
 
-		auto *likeButton = new QPushButton();
-		// likeButton->setIcon(QIcon(":/icons/like.png"));
-		likeButton->setText("Like");
-		likeButton->setFixedSize(50, 50);
-		layout->addWidget(likeButton, row, 2, Qt::AlignTop);
+		{
+			auto *durationLabel = new QLabel();
+			durationLabel->setText(track->duration().toString("mm:ss"));
+			durationLabel->setFixedSize(50, 50);
+			durationLabel->setAlignment(Qt::AlignCenter);
+			layout->addWidget(durationLabel, row, 1, Qt::AlignTop);
+		}
 
-		auto *durationLabel = new QLabel();
-		durationLabel->setText(track->duration().toString("mm:ss"));
-		durationLabel->setFixedSize(50, 50);
-		durationLabel->setAlignment(Qt::AlignCenter);
-		layout->addWidget(durationLabel, row, 3, Qt::AlignTop);
+		{
+			EntityListButton *trackButton;
+			if (mType == EntityType::Playlist) {
+				trackButton = new EntityListButton(track, (qint64)mId);
+			} else {
+				trackButton = new EntityListButton(track);
+			}
+			layout->addWidget(trackButton, row, 2, Qt::AlignTop);
+		}
+
+		{
+			auto *favoriteButton =
+				new FavoriteButton((qint64)track->id(), track->isFavorite());
+			layout->addWidget(favoriteButton, row, 3, Qt::AlignTop);
+		}
 
 		++row;
 	}
@@ -69,44 +81,31 @@ void TrackListPage::fillList() {
 	}
 
 	// set the scroll area's widget
-	scrollList()->setLayout(layout);
+	get()->setLayout(layout);
 }
 
-void TrackListPage::loadTrackFrom(EntityId id, EntityType type) {
-	if (id == mId && type == mType) {
-		return;
-	}
-
-	mId = id;
-	mType = type;
-	clearList();
-	fillList();
+QPair<EntityId, EntityType> TrackListCapture::id() const {
+	return {mId, mType};
 }
 
-QPair<EntityId, EntityType> TrackListPage::id() const { return {mId, mType}; }
+TrackListPage::TrackListPage(QWidget *parent) : Page(parent) {}
 
-const char *TrackListPage::scrollListName() const { return "tracklist"; }
+void TrackListPage::fill(EntityId id, EntityType type) {
+	ResourceManager &rm = ResourceManager::instance();
 
-QLabel *TrackListPage::cover() {
-	if (mCover == nullptr) {
-		mCover = findChild<QLabel *>("tracklistCoverLabel");
-	}
+	Entity *entity = (type == EntityType::Playlist)
+						 ? (Entity *)rm.getPlaylist((qint64)id)
+						 : (Entity *)rm.getArtist((qint64)id);
 
-	return mCover;
+	// load cover and set name
+	mPixmap.load("../../" + entity->cover());
+	mCover.get()->setPixmap(mPixmap.scaled(200, 200, Qt::KeepAspectRatio,
+										   Qt::SmoothTransformation));
+	mName.get()->setText(entity->name());
+
+	mList.loadTrackFrom(id, type);
 }
 
-QLabel *TrackListPage::name() {
-	if (mName == nullptr) {
-		mName = findChild<QLabel *>("tracklistNameLabel");
-	}
+QPair<EntityId, EntityType> TrackListPage::id() const { return mList.id(); }
 
-	return mName;
-}
-
-QPushButton *TrackListPage::viewOrigin() {
-	if (mViewOrigin == nullptr) {
-		mViewOrigin = findChild<QPushButton *>("viewTracklistOrigin");
-	}
-
-	return mViewOrigin;
-}
+void TrackListPage::reload() { mList.reload(); }

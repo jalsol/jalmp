@@ -7,6 +7,10 @@ MediaQueue& MediaQueue::instance() {
 	return instance;
 }
 
+QQueue<Track*> MediaQueue::userQueue() const { return mUserQueue; }
+
+QQueue<Track*> MediaQueue::systemQueue() const { return mSystemQueue; }
+
 void MediaQueue::setPlaylist(PlaylistId playlistId) {
 	if (mPlaylistId != playlistId) {
 		ResourceManager& rm = ResourceManager::instance();

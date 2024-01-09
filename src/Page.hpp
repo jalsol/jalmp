@@ -6,14 +6,7 @@
 class Page : public QWidget {
 public:
 	Page(QWidget *parent = nullptr);
-	virtual void fillList() = 0;
-	virtual void clearList();
-
-protected:
-	virtual const char *scrollListName() const = 0;
-	virtual QWidget *scrollList();
-
-	QWidget *mScrollList = nullptr;
+	// virtual void fill() = 0;
 };
 
 #endif // PAGE_HPP

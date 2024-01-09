@@ -27,4 +27,9 @@ TrackBuilder& TrackBuilder::setUrl(const QString& url) {
 	return *this;
 }
 
+TrackBuilder& TrackBuilder::setFavorite(bool isFavorite) {
+	mTrack.setFavorite(isFavorite);
+	return *this;
+}
+
 Track TrackBuilder::build() const { return mTrack; }

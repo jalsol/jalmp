@@ -8,16 +8,29 @@
 #include <QGridLayout>
 #include <QLabel>
 
-SearchPage::SearchPage(QWidget *parent) : Page{parent} {}
+SearchListCapture::SearchListCapture(QWidget *parent)
+	: ScrollListCapture{parent} {}
 
-void SearchPage::fillList() {
-	const auto &input = searchInput()->text();
-	if (input.isEmpty()) {
+SearchListCapture::SearchListCapture(const QString &capture, QWidget *parent)
+	: ScrollListCapture{capture, parent} {}
+
+void SearchListCapture::loadResultFrom(const QString &keyword) {
+	if (mKeyword == keyword) {
 		return;
 	}
 
+	if (keyword.isEmpty()) {
+		clear();
+		return;
+	}
+
+	mKeyword = keyword;
+	reload();
+}
+
+void SearchListCapture::fill() {
 	ResourceManager &rm = ResourceManager::instance();
-	auto entities = rm.getEntitiesByKeyword(input);
+	auto entities = rm.getEntitiesByKeyword(mKeyword);
 
 	auto tracks = [&entities]() {
 		QList<Track *> tracks;
@@ -30,7 +43,7 @@ void SearchPage::fillList() {
 	}();
 	MediaQueue::instance().setPlaylist(tracks);
 
-	QGridLayout *layout = new QGridLayout{scrollList()};
+	QGridLayout *layout = new QGridLayout{get()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
 
@@ -57,19 +70,18 @@ void SearchPage::fillList() {
 	}
 
 	// set the scroll area's widget
-	scrollList()->setLayout(layout);
+	get()->setLayout(layout);
 }
 
-void SearchPage::onSearchButtonClicked() {
-	clearList();
-	fillList();
-}
+SearchPage::SearchPage(QWidget *parent) : Page{parent} {}
 
-const char *SearchPage::scrollListName() const { return "searchlist"; }
-
-QLineEdit *SearchPage::searchInput() {
-	if (!mSearchInput) {
-		mSearchInput = findChild<QLineEdit *>("searchInput");
+void SearchPage::fill() {
+	const auto &input = mSearchInput.get()->text();
+	if (input.isEmpty()) {
+		return;
 	}
-	return mSearchInput;
+
+	mList.loadResultFrom(input);
 }
+
+void SearchPage::onSearchButtonClicked() { mList.reload(); }

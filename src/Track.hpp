@@ -11,6 +11,7 @@ public:
 	QTime duration() const;
 	EntityType type() const override;
 	QString url() const;
+	bool isFavorite() const;
 
 private:
 	friend class TrackBuilder;
@@ -18,9 +19,11 @@ private:
 
 	void setDuration(const QTime& duration);
 	void setUrl(const QString& url);
+	void setFavorite(bool isFavorite);
 
 	QTime mDuration{0, 0, 0, 0};
 	QString mUrl;
+	bool mIsFavorite = false;
 };
 
 #endif // TRACK_H

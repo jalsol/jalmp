@@ -69,8 +69,8 @@ Track* ResourceManager::getTrack(TrackId id) {
 	}
 
 	QSqlQuery query(mDatabase);
-	query.prepare(
-		"SELECT title, duration, cover_url, url FROM track WHERE id = :id");
+	query.prepare("SELECT title, duration, cover_url, url, is_favorite "
+				  "FROM track WHERE id = :id");
 	query.bindValue(":id", static_cast<qlonglong>(id));
 
 	if (!query.exec()) {
@@ -84,6 +84,7 @@ Track* ResourceManager::getTrack(TrackId id) {
 			QTime::fromMSecsSinceStartOfDay(query.value(1).toInt());
 		QString cover = query.value(2).toString();
 		QString url = query.value(3).toString();
+		bool isFavorite = query.value(4).toBool();
 
 		Track track = TrackBuilder()
 						  .setId(id)
@@ -91,6 +92,7 @@ Track* ResourceManager::getTrack(TrackId id) {
 						  .setDuration(duration)
 						  .setCover(cover)
 						  .setUrl(url)
+						  .setFavorite(isFavorite)
 						  .build();
 
 		mTracks.push_back(track);
@@ -310,5 +312,37 @@ Artist* ResourceManager::getArtistByPlaylist(PlaylistId playlistId) {
 		return getArtist(id);
 	} else {
 		return nullptr;
+	}
+}
+
+QList<Track*> ResourceManager::getAllFavoriteTracks() {
+	QSqlQuery query(mDatabase);
+	query.prepare("SELECT id FROM track WHERE is_favorite = 1");
+
+	QList<Track*> result;
+
+	if (query.exec()) {
+		while (query.next()) {
+			TrackId id = query.value(0).toULongLong();
+			result.append(getTrack(id));
+		}
+	}
+
+	return result;
+}
+
+void ResourceManager::setTrackFavorite(TrackId trackId, bool favorite) {
+	QSqlQuery query(mDatabase);
+	query.prepare("UPDATE track SET is_favorite = :favorite WHERE id = :id");
+	query.bindValue(":favorite", favorite);
+	query.bindValue(":id", static_cast<qlonglong>(trackId));
+
+	if (query.exec()) {
+		qDebug() << "Track favorite set to" << favorite;
+		mDatabase.commit();
+		getTrack(trackId)->setFavorite(favorite);
+		// TODO: emit trackFavoriteChanged(trackId, favorite);
+	} else {
+		qDebug() << "Error while setting track favorite";
 	}
 }

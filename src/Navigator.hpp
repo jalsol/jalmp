@@ -22,6 +22,7 @@ signals:
 	void navigatedToArtist(ArtistId artistId);
 	void navigatedToPlaylist(PlaylistId playlistId);
 	void navigatedToTrack(PlaylistId playlistId, TrackId trackId);
+	void toggledFavorite(TrackId trackId, bool favorite);
 
 private:
 	Navigator() = default;

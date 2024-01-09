@@ -5,14 +5,24 @@
 
 #include <QGridLayout>
 
-ArtistsPage::ArtistsPage(QWidget *parent) : Page{parent} {}
+ArtistsListCapture::ArtistsListCapture(QWidget *parent)
+	: ScrollListCapture{parent} {}
 
-void ArtistsPage::fillList() {
+ArtistsListCapture::ArtistsListCapture(const QString &capture, QWidget *parent)
+	: ScrollListCapture(capture, parent) {}
+
+void ArtistsListCapture::loadArtists() {
+	if (!mFilled) {
+		fill();
+	}
+}
+
+void ArtistsListCapture::fill() {
 	if (mFilled) {
 		return;
 	}
 
-	QGridLayout *layout = new QGridLayout{scrollList()};
+	QGridLayout *layout = new QGridLayout{get()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
 
@@ -31,8 +41,10 @@ void ArtistsPage::fillList() {
 		layout->setRowStretch(artists.size() / 4, 1);
 	}
 
-	scrollList()->setLayout(layout);
+	get()->setLayout(layout);
 	mFilled = true;
 }
 
-const char *ArtistsPage::scrollListName() const { return "artistslist"; }
+ArtistsPage::ArtistsPage(QWidget *parent) : Page{parent} {}
+
+void ArtistsPage::fill() { mList.loadArtists(); }

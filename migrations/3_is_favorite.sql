@@ -1,0 +1,1 @@
+ALTER TABLE track ADD is_favorite BOOL DEFAULT 0 NOT NULL;

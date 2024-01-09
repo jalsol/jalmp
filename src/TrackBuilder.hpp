@@ -17,6 +17,7 @@ public:
 	TrackBuilder& setDuration(const QTime& duration);
 	TrackBuilder& setCover(const QString& cover);
 	TrackBuilder& setUrl(const QString& url);
+	TrackBuilder& setFavorite(bool isFavorite);
 	Track build() const;
 
 private:

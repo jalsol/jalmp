@@ -16,6 +16,7 @@ void Navigator::navigateTo(QString path) {
 	PlaylistId playlistId = PlaylistId::Invalid;
 	ArtistId artistId = ArtistId::Invalid;
 	TrackId trackId = TrackId::Invalid;
+	int like = -1;
 
 	for (int i = 0; i < parts.size(); ++i) {
 		QString part = parts.at(i);
@@ -25,10 +26,16 @@ void Navigator::navigateTo(QString path) {
 			artistId = parts.at(++i).toLongLong();
 		} else if (part == "track") {
 			trackId = parts.at(++i).toLongLong();
+		} else if (part == "like") {
+			like = true;
+		} else if (part == "unlike") {
+			like = false;
 		}
 	}
 
-	if (artistId != ArtistId::Invalid) {
+	if (like != -1) {
+		emit toggledFavorite(trackId, like);
+	} else if (artistId != ArtistId::Invalid) {
 		emit navigatedToArtist(artistId);
 	} else if (trackId != TrackId::Invalid) {
 		emit navigatedToTrack(playlistId, trackId);

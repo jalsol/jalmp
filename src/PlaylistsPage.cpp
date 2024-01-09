@@ -5,9 +5,23 @@
 
 #include <QGridLayout>
 
-PlaylistsPage::PlaylistsPage(QWidget *parent) : Page(parent) {}
+PlaylistsListCapture::PlaylistsListCapture(QWidget *parent)
+	: ScrollListCapture{parent} {}
 
-void PlaylistsPage::fillList() {
+PlaylistsListCapture::PlaylistsListCapture(const QString &capture,
+										   QWidget *parent)
+	: ScrollListCapture{capture, parent} {}
+
+void PlaylistsListCapture::loadArtistPlaylists(ArtistId artistId) {
+	if (mArtistId == artistId) {
+		return;
+	}
+
+	mArtistId = artistId;
+	reload();
+}
+
+void PlaylistsListCapture::fill() {
 	ResourceManager &rm = ResourceManager::instance();
 	QList<Playlist *> playlists;
 	if (mArtistId == ArtistId::Invalid) {
@@ -16,7 +30,7 @@ void PlaylistsPage::fillList() {
 		playlists = rm.getPlaylistsByArtist(mArtistId);
 	}
 
-	QGridLayout *layout = new QGridLayout{scrollList()};
+	QGridLayout *layout = new QGridLayout{get()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
 
@@ -33,19 +47,11 @@ void PlaylistsPage::fillList() {
 		layout->setRowStretch(playlists.size() / 4, 1);
 	}
 
-	scrollList()->setLayout(layout);
+	get()->setLayout(layout);
 }
 
-void PlaylistsPage::loadArtistPlaylists(ArtistId artistId) {
-	if (mArtistId == artistId) {
-		return;
-	}
+PlaylistsPage::PlaylistsPage(QWidget *parent) : Page(parent) {}
 
-	mArtistId = artistId;
-	clearList();
-	fillList();
-}
-
-const char *PlaylistsPage::scrollListName() const {
-	return "playlistscrollist";
+void PlaylistsPage::fill(ArtistId artistId) {
+	mList.loadArtistPlaylists(artistId);
 }

@@ -15,6 +15,9 @@ public:
 	MediaQueue(MediaQueue&&) = delete;
 	MediaQueue& operator=(MediaQueue&&) = delete;
 
+	QQueue<Track*> userQueue() const;
+	QQueue<Track*> systemQueue() const;
+
 	void setPlaylist(PlaylistId playlistId);
 	void setPlaylist(const QList<Track*>& playlist);
 	void addTrack(TrackId trackId);

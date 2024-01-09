@@ -27,6 +27,9 @@ public:
 	QList<Playlist*> getAllPlaylists();
 	QList<Playlist*> getPlaylistsByArtist(ArtistId artistId);
 	Artist* getArtistByPlaylist(PlaylistId playlistId);
+	QList<Track*> getAllFavoriteTracks();
+
+	void setTrackFavorite(TrackId trackId, bool favourite);
 
 private:
 	ResourceManager();

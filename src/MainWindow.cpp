@@ -53,9 +53,13 @@ MainWindow::MainWindow(QWidget *parent)
 			&MainWindow::onNavigatedToPlaylist);
 	connect(navigator, &Navigator::navigatedToTrack, this,
 			&MainWindow::onNavigatedToTrack);
+	connect(navigator, &Navigator::toggledFavorite, this,
+			&MainWindow::onToggledFavorite);
 
 	connect(ui->viewTracklistOriginButton, &QPushButton::clicked, this,
 			&MainWindow::onViewOriginButtonClicked);
+
+	ui->homePage->fillFavorites();
 }
 
 MainWindow::~MainWindow() {
@@ -119,12 +123,12 @@ void MainWindow::onSearchButtonClicked() {
 }
 
 void MainWindow::onPlaylistsButtonClicked() {
-	ui->playlistsPage->loadArtistPlaylists(ArtistId::Invalid);
+	ui->playlistsPage->fill(ArtistId::Invalid);
 	ui->stackedWidget->setCurrentIndex(Playlists);
 }
 
 void MainWindow::onArtistsButtonClicked() {
-	ui->artistsPage->fillList();
+	ui->artistsPage->fill();
 	ui->stackedWidget->setCurrentIndex(Artists);
 }
 
@@ -132,7 +136,7 @@ void MainWindow::onViewOriginButtonClicked() {
 	auto [id, type] = ui->tracklistPage->id();
 
 	if (type == EntityType::Artist) {
-		ui->playlistsPage->loadArtistPlaylists((qint64)id);
+		ui->playlistsPage->fill((qint64)id);
 		ui->stackedWidget->setCurrentIndex(Playlists);
 	} else {
 		Artist *artist =
@@ -142,14 +146,14 @@ void MainWindow::onViewOriginButtonClicked() {
 }
 
 void MainWindow::onNavigatedToArtist(ArtistId artistId) {
-	ui->tracklistPage->loadTrackFrom(artistId, EntityType::Artist);
+	ui->tracklistPage->fill(artistId, EntityType::Artist);
 	ui->stackedWidget->setCurrentIndex(Tracklist);
 	ui->viewTracklistOriginButton->setText("View Albums");
 	resetCheckSidebarButtons();
 }
 
 void MainWindow::onNavigatedToPlaylist(PlaylistId playlistId) {
-	ui->tracklistPage->loadTrackFrom(playlistId, EntityType::Playlist);
+	ui->tracklistPage->fill(playlistId, EntityType::Playlist);
 	ui->stackedWidget->setCurrentIndex(Tracklist);
 	ui->viewTracklistOriginButton->setText("View Artist");
 }
@@ -157,6 +161,12 @@ void MainWindow::onNavigatedToPlaylist(PlaylistId playlistId) {
 void MainWindow::onNavigatedToTrack(PlaylistId playlistId, TrackId trackId) {
 	Track *track = player->invokeTrack(playlistId, trackId);
 	playTrack(track);
+}
+
+void MainWindow::onToggledFavorite(TrackId trackId, bool favorite) {
+	ResourceManager::instance().setTrackFavorite(trackId, favorite);
+	ui->tracklistPage->reload();
+	ui->homePage->fillFavorites();
 }
 
 void MainWindow::onSidebarTitleLinkActivated(const QString &link) {
@@ -231,4 +241,5 @@ void MainWindow::playTrack(Track *track) {
 			.arg(trackPath, track->name(), artistsAnchor));
 
 	onPlayButtonClicked();
+	ui->homePage->fillQueues();
 }
