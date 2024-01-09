@@ -87,4 +87,4 @@ void SearchPage::fill() {
 	mList.loadResultFrom(input);
 }
 
-void SearchPage::onSearchButtonClicked() { mList.reload(); }
+void SearchPage::onSearchButtonClicked() { fill(); }
