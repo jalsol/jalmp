@@ -45,7 +45,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="homePage">
      <widget class="QLabel" name="label">
@@ -246,8 +246,8 @@
       </widget>
      </widget>
     </widget>
-    <widget class="SingleArtistPage" name="singleArtistPage">
-     <widget class="QLabel" name="artistCoverLabel">
+    <widget class="TrackListPage" name="tracklistPage">
+     <widget class="QLabel" name="tracklistCoverLabel">
       <property name="geometry">
        <rect>
         <x>60</x>
@@ -260,7 +260,7 @@
        <string/>
       </property>
      </widget>
-     <widget class="QLabel" name="artistNameLabel">
+     <widget class="QLabel" name="tracklistNameLabel">
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -279,7 +279,7 @@
        <string/>
       </property>
      </widget>
-     <widget class="QPushButton" name="viewAlbumButton">
+     <widget class="QPushButton" name="viewTracklistOriginButton">
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -289,7 +289,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>View Albums</string>
+       <string/>
       </property>
      </widget>
      <widget class="QScrollArea" name="tracklistArea">
@@ -527,10 +527,10 @@
         <string>Home</string>
        </property>
        <property name="checkable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="checked">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="autoExclusive">
         <bool>true</bool>
@@ -543,7 +543,7 @@
         <string>Search</string>
        </property>
        <property name="checkable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="autoExclusive">
         <bool>true</bool>
@@ -556,7 +556,7 @@
         <string>Playlists</string>
        </property>
        <property name="checkable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="autoExclusive">
         <bool>true</bool>
@@ -569,7 +569,7 @@
         <string>Artists</string>
        </property>
        <property name="checkable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="autoExclusive">
         <bool>true</bool>
@@ -613,12 +613,6 @@
    <header>SidebarTitle.hpp</header>
   </customwidget>
   <customwidget>
-   <class>SingleArtistPage</class>
-   <extends>QWidget</extends>
-   <header>SingleArtistPage.hpp</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>SearchPage</class>
    <extends>QWidget</extends>
    <header>SearchPage.hpp</header>
@@ -634,6 +628,12 @@
    <class>PlaylistsPage</class>
    <extends>QWidget</extends>
    <header>PlaylistsPage.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TrackListPage</class>
+   <extends>QWidget</extends>
+   <header>TrackListPage.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

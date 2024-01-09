@@ -298,3 +298,17 @@ QList<Playlist*> ResourceManager::getPlaylistsByArtist(ArtistId artistId) {
 
 	return result;
 }
+
+Artist* ResourceManager::getArtistByPlaylist(PlaylistId playlistId) {
+	QSqlQuery query(mDatabase);
+	query.prepare("SELECT artist_id FROM artist_playlist "
+				  "WHERE playlist_id = :id");
+	query.bindValue(":id", static_cast<qlonglong>(playlistId));
+
+	if (query.exec() && query.next()) {
+		ArtistId id = query.value(0).toULongLong();
+		return getArtist(id);
+	} else {
+		return nullptr;
+	}
+}

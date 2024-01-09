@@ -1,5 +1,6 @@
 #include "Navigator.hpp"
 
+#include <QDebug>
 #include <QStringList>
 
 Navigator* Navigator::instance() {
@@ -8,6 +9,7 @@ Navigator* Navigator::instance() {
 }
 
 void Navigator::navigateTo(QString path) {
+	qDebug() << "navigating:" << path;
 	QStringList parts = path.split('/');
 	parts.removeAll("");
 

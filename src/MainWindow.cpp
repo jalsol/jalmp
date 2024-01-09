@@ -54,8 +54,8 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(navigator, &Navigator::navigatedToTrack, this,
 			&MainWindow::onNavigatedToTrack);
 
-	connect(ui->viewAlbumButton, &QPushButton::clicked, this,
-			&MainWindow::onViewAlbumButtonClicked);
+	connect(ui->viewTracklistOriginButton, &QPushButton::clicked, this,
+			&MainWindow::onViewOriginButtonClicked);
 }
 
 MainWindow::~MainWindow() {
@@ -128,23 +128,30 @@ void MainWindow::onArtistsButtonClicked() {
 	ui->stackedWidget->setCurrentIndex(Artists);
 }
 
-void MainWindow::onViewAlbumButtonClicked() {
-	ArtistId artistID = ui->singleArtistPage->artistId();
-	ui->playlistsPage->loadArtistPlaylists(artistID);
-	ui->stackedWidget->setCurrentIndex(Playlists);
+void MainWindow::onViewOriginButtonClicked() {
+	auto [id, type] = ui->tracklistPage->id();
+
+	if (type == EntityType::Artist) {
+		ui->playlistsPage->loadArtistPlaylists((qint64)id);
+		ui->stackedWidget->setCurrentIndex(Playlists);
+	} else {
+		Artist *artist =
+			ResourceManager::instance().getArtistByPlaylist((qint64)id);
+		onNavigatedToArtist((qint64)artist->id());
+	}
 }
 
 void MainWindow::onNavigatedToArtist(ArtistId artistId) {
-	ui->singleArtistPage->loadArtist(artistId);
-	ui->stackedWidget->setCurrentIndex(SingleArtist);
+	ui->tracklistPage->loadTrackFrom(artistId, EntityType::Artist);
+	ui->stackedWidget->setCurrentIndex(Tracklist);
+	ui->viewTracklistOriginButton->setText("View Albums");
 	resetCheckSidebarButtons();
 }
 
 void MainWindow::onNavigatedToPlaylist(PlaylistId playlistId) {
-	qDebug() << "PlaylistId: " << playlistId;
-	// ui->playlistPage->loadPlaylist(playlistId);
-	// ui->stackedWidget->setCurrentIndex(SinglePlaylist);
-	// resetCheckSidebarButtons();
+	ui->tracklistPage->loadTrackFrom(playlistId, EntityType::Playlist);
+	ui->stackedWidget->setCurrentIndex(Tracklist);
+	ui->viewTracklistOriginButton->setText("View Artist");
 }
 
 void MainWindow::onNavigatedToTrack(PlaylistId playlistId, TrackId trackId) {
@@ -203,9 +210,8 @@ void MainWindow::playTrack(Track *track) {
 
 	// change title
 	ResourceManager &rm = ResourceManager::instance();
-	QString trackPath = QString("playlist/%1/track/%2")
-							.arg(QString::number(player->playlistId()),
-								 QString::number(track->id()));
+	QString trackPath =
+		QString("playlist/%1").arg(QString::number(player->playlistId()));
 
 	QList<Artist *> artists = rm.getArtistsByTrack(TrackId(track->id()));
 	QString artistsAnchor =

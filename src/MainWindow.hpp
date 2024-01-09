@@ -30,7 +30,7 @@ private slots:
 	void onSearchButtonClicked();
 	void onPlaylistsButtonClicked();
 	void onArtistsButtonClicked();
-	void onViewAlbumButtonClicked();
+	void onViewOriginButtonClicked();
 
 	void onSidebarTitleLinkActivated(const QString &link);
 	void resetCheckSidebarButtons();
@@ -48,7 +48,7 @@ private:
 		Search,
 		Playlists,
 		Artists,
-		SingleArtist,
+		Tracklist,
 	};
 
 	Ui::MainWindow *ui;

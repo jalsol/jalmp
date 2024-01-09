@@ -5,8 +5,6 @@
 
 #include <QString>
 
-enum class EntityType : int64_t { Default, Artist, Playlist, Track };
-
 class Entity {
 public:
 	virtual EntityId id() const;

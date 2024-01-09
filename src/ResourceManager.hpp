@@ -26,6 +26,7 @@ public:
 	QList<Artist*> getAllArtists();
 	QList<Playlist*> getAllPlaylists();
 	QList<Playlist*> getPlaylistsByArtist(ArtistId artistId);
+	Artist* getArtistByPlaylist(PlaylistId playlistId);
 
 private:
 	ResourceManager();

@@ -1,29 +1,29 @@
-#include "SingleArtistPage.hpp"
+#include "TrackListPage.hpp"
 
 #include "EntityListButton.hpp"
 #include "MediaQueue.hpp"
 #include "ResourceManager.hpp"
 
-#include <QDebug>
 #include <QGridLayout>
-#include <QLabel>
-#include <QList>
 
-SingleArtistPage::SingleArtistPage(QWidget *parent) : Page(parent) {}
+TrackListPage::TrackListPage(QWidget *parent) : Page(parent) {}
 
-void SingleArtistPage::fillList() {
+void TrackListPage::fillList() {
 	ResourceManager &rm = ResourceManager::instance();
-	Artist *artist = rm.getArtist(mArtistId);
-	Q_ASSERT(artist != nullptr);
+	Entity *entity = (mType == EntityType::Playlist)
+						 ? (Entity *)rm.getPlaylist((qint64)mId)
+						 : (Entity *)rm.getArtist((qint64)mId);
 
 	// load cover and set name
-	mPixmap.load("../../" + artist->cover());
+	mPixmap.load("../../" + entity->cover());
 	cover()->setPixmap(mPixmap.scaled(200, 200, Qt::KeepAspectRatio,
 									  Qt::SmoothTransformation));
-	name()->setText(artist->name());
+	name()->setText(entity->name());
 
 	// display tracks in the QScrollArea
-	QList<Track *> tracks = rm.getTracksByArtist(mArtistId);
+	QList<Track *> tracks = (mType == EntityType::Playlist)
+								? rm.getTracksByPlaylist((qint64)mId)
+								: rm.getTracksByArtist((qint64)mId);
 	MediaQueue::instance().setPlaylist(tracks);
 	QGridLayout *layout = new QGridLayout{scrollList()};
 	layout->setSpacing(0);
@@ -41,7 +41,12 @@ void SingleArtistPage::fillList() {
 		idLabel->setAlignment(Qt::AlignCenter);
 		layout->addWidget(idLabel, row, 0, Qt::AlignTop);
 
-		auto *trackButton = new EntityListButton(track);
+		EntityListButton *trackButton;
+		if (mType == EntityType::Playlist) {
+			trackButton = new EntityListButton(track, (qint64)mId);
+		} else {
+			trackButton = new EntityListButton(track);
+		}
 		layout->addWidget(trackButton, row, 1, Qt::AlignTop);
 
 		auto *likeButton = new QPushButton();
@@ -67,41 +72,41 @@ void SingleArtistPage::fillList() {
 	scrollList()->setLayout(layout);
 }
 
-void SingleArtistPage::loadArtist(ArtistId artistId) {
-	if (artistId == mArtistId) {
+void TrackListPage::loadTrackFrom(EntityId id, EntityType type) {
+	if (id == mId && type == mType) {
 		return;
 	}
 
-	mArtistId = artistId;
-
+	mId = id;
+	mType = type;
 	clearList();
 	fillList();
 }
 
-ArtistId SingleArtistPage::artistId() const { return mArtistId; }
+QPair<EntityId, EntityType> TrackListPage::id() const { return {mId, mType}; }
 
-const char *SingleArtistPage::scrollListName() const { return "tracklist"; }
+const char *TrackListPage::scrollListName() const { return "tracklist"; }
 
-QLabel *SingleArtistPage::cover() {
+QLabel *TrackListPage::cover() {
 	if (mCover == nullptr) {
-		mCover = findChild<QLabel *>("artistCoverLabel");
+		mCover = findChild<QLabel *>("tracklistCoverLabel");
 	}
 
 	return mCover;
 }
 
-QLabel *SingleArtistPage::name() {
+QLabel *TrackListPage::name() {
 	if (mName == nullptr) {
-		mName = findChild<QLabel *>("artistNameLabel");
+		mName = findChild<QLabel *>("tracklistNameLabel");
 	}
 
 	return mName;
 }
 
-QPushButton *SingleArtistPage::albumButton() {
-	if (mAlbumButton == nullptr) {
-		mAlbumButton = findChild<QPushButton *>("viewAlbumButton");
+QPushButton *TrackListPage::viewOrigin() {
+	if (mViewOrigin == nullptr) {
+		mViewOrigin = findChild<QPushButton *>("viewTracklistOrigin");
 	}
 
-	return mAlbumButton;
+	return mViewOrigin;
 }

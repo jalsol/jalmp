@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+enum class EntityType : int64_t { Default, Artist, Playlist, Track };
+
 class EntityId {
 public:
 	static constexpr int64_t Invalid = -1;
