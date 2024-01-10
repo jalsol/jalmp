@@ -84,8 +84,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 	ui->playButton->setOnTexture("4C7750");
 	ui->playButton->setOffTexture("4C9F00");
-	ui->muteButton->setOnTexture("4B9660");
-	ui->muteButton->setOffTexture("4B8068");
+	ui->muteButton->setOnTexture("4B8068");
+	ui->muteButton->setOffTexture("4B9660");
 	ui->repeatButton->setOnTexture("1D2E78");
 	ui->repeatButton->setOffTexture("1D3C68");
 	ui->shuffleButton->setOnTexture("1D1518");
@@ -166,6 +166,7 @@ void MainWindow::onStopButtonClicked() {
 	player->stop();
 	updater->stop();
 	ui->seekbar->setValue(0);
+	ui->playButton->setChecked(false);
 }
 
 void MainWindow::onMuteButtonClicked() {
