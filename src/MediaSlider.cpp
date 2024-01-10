@@ -5,8 +5,6 @@ MediaSlider::MediaSlider(Qt::Orientation orientation, QWidget *parent)
 
 MediaSlider::MediaSlider(QWidget *parent) : QSlider(parent) {}
 
-// void MediaSlider::clicked(bool checked) { emit clicked(checked); }
-
 void MediaSlider::mousePressEvent(QMouseEvent *event) {
 	if (event->button() == Qt::LeftButton) {
 

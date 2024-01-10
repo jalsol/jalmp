@@ -51,7 +51,7 @@
      <enum>QFrame::NoFrame</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="HomePage" name="homePage">
      <widget class="QScrollArea" name="userQueueListArea">
@@ -506,6 +506,9 @@
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="invertedControls">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="playButton">

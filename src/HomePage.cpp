@@ -1,5 +1,6 @@
 #include "HomePage.hpp"
 
+#include "AddQueueButton.hpp"
 #include "DeleteQueueButton.hpp"
 #include "DownQueueButton.hpp"
 #include "DurationLabel.hpp"
@@ -130,6 +131,11 @@ void FavoriteListCapture::fill() {
 			auto *favoriteButton =
 				new FavoriteButton((qint64)track->id(), track->isFavorite());
 			layout->addWidget(favoriteButton, row, col++, Qt::AlignTop);
+		}
+
+		{
+			auto *addQueueButton = new AddQueueButton((qint64)track->id());
+			layout->addWidget(addQueueButton, row, col++, Qt::AlignTop);
 		}
 
 		++row;

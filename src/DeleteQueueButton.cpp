@@ -2,6 +2,8 @@
 
 #include "Navigator.hpp"
 
+#include <QSize>
+
 DeleteQueueButton::DeleteQueueButton(QWidget *parent) : QPushButton(parent) {
 	connect(this, &QPushButton::clicked, this,
 			&DeleteQueueButton::deleteFromQueue);
@@ -11,8 +13,9 @@ DeleteQueueButton::DeleteQueueButton(TrackId trackId, QWidget *parent)
 	: DeleteQueueButton(parent) {
 	mTrackId = trackId;
 
-	static const QIcon icon = QIcon("../../assets/14F7C8.png");
+	static const QIcon icon = QIcon("../../assets/24F050.png");
 	setIcon(icon);
+	setIconSize(QSize(35, 35));
 	setFixedSize(35, 35);
 	setInternalState();
 }

@@ -73,8 +73,9 @@ MainWindow::MainWindow(QWidget *parent)
 		ui->coverLabel->setPixmap(cover);
 	}
 	{
-		QPixmap goButton("../../assets/1C1998.png");
+		QPixmap goButton("../../assets/24D500.png");
 		ui->searchGoButton->setIcon(goButton);
+		ui->searchGoButton->setIconSize(QSize(30, 30));
 	}
 	ui->sidebarFavButton->setVisible(false);
 }

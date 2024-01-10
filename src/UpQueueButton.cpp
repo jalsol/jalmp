@@ -12,7 +12,7 @@ UpQueueButton::UpQueueButton(TrackId trackId, QWidget *parent)
 
 	// setStyleSheet(
 	// 	"QPushButton { border-image: url(../../assets/1A7D10.png); }");
-	static const QIcon icon = QIcon("../../assets/1A7D10.png");
+	static const QIcon icon = QIcon("../../assets/4B35A8u.png");
 	setIcon(icon);
 	setFixedSize(35, 35);
 	setInternalState();

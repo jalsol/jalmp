@@ -12,7 +12,7 @@ DownQueueButton::DownQueueButton(TrackId trackId, QWidget *parent)
 
 	// setStyleSheet(
 	// 	"QPushButton { border-image: url(../../assets/1A7AD8.png); }");
-	static const QIcon icon = QIcon("../../assets/1A7AD8.png");
+	static const QIcon icon = QIcon("../../assets/4B35A8d.png");
 	setIcon(icon);
 	setFixedSize(35, 35);
 	setInternalState();
