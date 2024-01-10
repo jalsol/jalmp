@@ -45,8 +45,11 @@ Track *MediaPlayer::invokeTrack(PlaylistId playlistId, TrackId trackId) {
 		}
 	}
 
+	mPlaylistId = playlistId;
+
 	if (fromUserQueue) {
 		queue.skipPast(QueueType::User, trackId);
+		qDebug() << "User queue skip past" << trackId;
 	} else {
 		queue.skipPast(QueueType::System, trackId);
 		queue.refillSystemQueue();

@@ -43,10 +43,8 @@ private:
 	MediaQueue();
 
 	QQueue<Track*> mQueue[2];
-	QQueue<Track*> mBackupQueue;
 
 	QList<Track*> mLoopingPlaylist;
-	QList<Track*> mBackupList;
 	int mLastLoopingIdx;
 	PlaylistId mPlaylistId = PlaylistId::Invalid;
 

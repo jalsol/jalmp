@@ -50,11 +50,12 @@ void QueueListCapture::fill() {
 		}
 
 		{
-			PlaylistId playlistId = mQueueType == QueueType::User
-										? PlaylistId::UserQueue
-										: PlaylistId::Favorites;
+			qint64 playlistId =
+				(mQueueType == QueueType::User)
+					? PlaylistId::UserQueue
+					: (qint64)MediaQueue::instance().playlistId();
 
-			auto *button = new EntityListButton(track, (qint64)playlistId);
+			auto *button = new EntityListButton(track, playlistId);
 			layout->addWidget(button, row, col++, Qt::AlignTop);
 		}
 

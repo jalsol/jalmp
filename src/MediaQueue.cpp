@@ -163,8 +163,6 @@ Track* MediaQueue::skipPast(QueueType queueType, TrackId trackId) {
 void MediaQueue::shuffleSystemQueue() {
 	std::random_device rd;
 	std::mt19937 g(rd());
-	mBackupQueue = mQueue[System];
-	mBackupList = mLoopingPlaylist;
 
 	std::shuffle(mQueue[System].begin(), mQueue[System].end(), g);
 	std::shuffle(mLoopingPlaylist.begin(), mLoopingPlaylist.end(), g);
@@ -172,7 +170,10 @@ void MediaQueue::shuffleSystemQueue() {
 }
 
 void MediaQueue::unshuffleSystemQueue() {
-	mQueue[System] = mBackupQueue;
-	mLoopingPlaylist = mBackupList;
+	std::sort(mLoopingPlaylist.begin(), mLoopingPlaylist.end(),
+			  [](const Track* a, const Track* b) { return a->id() < b->id(); });
+	std::sort(mQueue[System].begin(), mQueue[System].end(),
+			  [](const Track* a, const Track* b) { return a->id() < b->id(); });
+
 	emit queueChanged(System);
 }
