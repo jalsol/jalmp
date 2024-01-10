@@ -61,6 +61,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 		src/DurationLabel.hpp src/DurationLabel.cpp
 		src/IndexLabel.hpp src/IndexLabel.cpp
 		src/AddQueueButton.hpp src/AddQueueButton.cpp
+		src/ToggleButton.hpp src/ToggleButton.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET jalmp APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

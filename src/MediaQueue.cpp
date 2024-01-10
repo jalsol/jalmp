@@ -115,6 +115,10 @@ Track* MediaQueue::next() {
 
 	refillSystemQueue();
 
+	if (mQueue[System].empty()) {
+		return nullptr;
+	}
+
 	if (mOnRepeat) {
 		return mQueue[System].first();
 	} else {
@@ -154,4 +158,21 @@ Track* MediaQueue::skipPast(QueueType queueType, TrackId trackId) {
 	emit queueChanged(queueType);
 
 	return nullptr;
+}
+
+void MediaQueue::shuffleSystemQueue() {
+	std::random_device rd;
+	std::mt19937 g(rd());
+	mBackupQueue = mQueue[System];
+	mBackupList = mLoopingPlaylist;
+
+	std::shuffle(mQueue[System].begin(), mQueue[System].end(), g);
+	std::shuffle(mLoopingPlaylist.begin(), mLoopingPlaylist.end(), g);
+	emit queueChanged(System);
+}
+
+void MediaQueue::unshuffleSystemQueue() {
+	mQueue[System] = mBackupQueue;
+	mLoopingPlaylist = mBackupList;
+	emit queueChanged(System);
 }

@@ -29,6 +29,8 @@ public:
 	void moveUp(QueueType queueType, TrackId trackId);
 	void moveDown(QueueType queueType, TrackId trackId);
 	void refillSystemQueue();
+	void shuffleSystemQueue();
+	void unshuffleSystemQueue();
 
 	Track* next();
 	Track* skipUntil(QueueType queueType, TrackId trackId);
@@ -41,8 +43,10 @@ private:
 	MediaQueue();
 
 	QQueue<Track*> mQueue[2];
+	QQueue<Track*> mBackupQueue;
 
 	QList<Track*> mLoopingPlaylist;
+	QList<Track*> mBackupList;
 	int mLastLoopingIdx;
 	PlaylistId mPlaylistId = PlaylistId::Invalid;
 

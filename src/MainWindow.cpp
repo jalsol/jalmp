@@ -2,7 +2,7 @@
 #include "./ui_MainWindow.h"
 
 #include "FavoriteButton.hpp"
-// #include "MediaQueue.hpp"
+#include "MediaQueue.hpp"
 #include "MediaSlider.hpp"
 #include "ResourceManager.hpp"
 
@@ -81,6 +81,15 @@ MainWindow::MainWindow(QWidget *parent)
 		ui->searchGoButton->setIconSize(QSize(30, 30));
 	}
 	ui->sidebarFavButton->setVisible(false);
+
+	ui->playButton->setOnTexture("4C7750");
+	ui->playButton->setOffTexture("4C9F00");
+	ui->muteButton->setOnTexture("4B9660");
+	ui->muteButton->setOffTexture("4B8068");
+	ui->repeatButton->setOnTexture("1D2E78");
+	ui->repeatButton->setOffTexture("1D3C68");
+	ui->shuffleButton->setOnTexture("1D1518");
+	ui->shuffleButton->setOffTexture("1D2230");
 }
 
 MainWindow::~MainWindow() {
@@ -90,15 +99,16 @@ MainWindow::~MainWindow() {
 
 void MainWindow::onPlayButtonClicked() {
 	auto state = player->playbackState();
+	if (player->source().isEmpty()) {
+		return;
+	}
 
 	if (state == QMediaPlayer::PlayingState) {
 		player->pause();
-		ui->playButton->setStyleSheet(
-			"QPushButton { border-image: url(../../assets/4C9F00.png); }");
+		ui->playButton->setChecked(false);
 	} else {
 		player->play();
-		ui->playButton->setStyleSheet(
-			"QPushButton { border-image: url(../../assets/4C7750.png); }");
+		ui->playButton->setChecked(true);
 		updater->start();
 	}
 }
@@ -117,11 +127,9 @@ void MainWindow::onSeekbarReleased() {
 void MainWindow::onVolumeValueChanged(int value) {
 	player->setVolume(value);
 	if (player->isMuted()) {
-		ui->muteButton->setStyleSheet(
-			"QPushButton { border-image: url(../../assets/4B8068.png); }");
+		ui->muteButton->setChecked(true);
 	} else {
-		ui->muteButton->setStyleSheet(
-			"QPushButton { border-image: url(../../assets/4B9660.png); }");
+		ui->muteButton->setChecked(false);
 	}
 }
 
@@ -131,25 +139,21 @@ void MainWindow::onRepeatButtonClicked() {
 
 		if (loops == QMediaPlayer::Once) {
 			player->setLoops(QMediaPlayer::Infinite);
-			ui->repeatButton->setStyleSheet(
-				"QPushButton { border-image: url(../../assets/1D2E78.png); }");
+			ui->repeatButton->setChecked(true);
 		} else {
 			player->setLoops(QMediaPlayer::Once);
-			ui->repeatButton->setStyleSheet(
-				"QPushButton { border-image: url(../../assets/1D3C68.png); }");
+			ui->repeatButton->setChecked(false);
 		}
 	}
 }
 
 void MainWindow::onShuffleButtonClicked() {
 	if (ui->shuffleButton->isChecked()) {
-		ui->shuffleButton->setChecked(false);
-		ui->shuffleButton->setStyleSheet(
-			"QPushButton { border-image: url(../../assets/1D2230.png); }");
-	} else {
 		ui->shuffleButton->setChecked(true);
-		ui->shuffleButton->setStyleSheet(
-			"QPushButton { border-image: url(../../assets/1D1518.png); }");
+		MediaQueue::instance().shuffleSystemQueue();
+	} else {
+		ui->shuffleButton->setChecked(false);
+		MediaQueue::instance().unshuffleSystemQueue();
 	}
 }
 
@@ -164,12 +168,10 @@ void MainWindow::onMuteButtonClicked() {
 
 	if (player->isMuted()) {
 		ui->volume->setValue(0);
-		ui->muteButton->setStyleSheet(
-			"QPushButton { border-image: url(../../assets/4B8068.png); }");
+		ui->muteButton->setChecked(true);
 	} else {
 		ui->volume->setValue(player->volume());
-		ui->muteButton->setStyleSheet(
-			"QPushButton { border-image: url(../../assets/4B9660.png); }");
+		ui->muteButton->setChecked(false);
 	}
 }
 
@@ -241,7 +243,16 @@ void MainWindow::update() {
 	if (newValue + 1 == ui->seekbar->maximum()) {
 		newValue = 0;
 		if (player->loops() == QMediaPlayer::Once) {
-			playTrack(player->nextTrack());
+			Track *track = player->nextTrack();
+			if (track != nullptr) {
+				playTrack(track);
+				return;
+			} else {
+				player->stop();
+				updater->stop();
+				ui->seekbar->setValue(0);
+				return;
+			}
 		}
 	}
 
@@ -250,8 +261,7 @@ void MainWindow::update() {
 
 void MainWindow::playTrack(Track *track) {
 	player->pause();
-	ui->playButton->setStyleSheet(
-		"QPushButton { border-image: url(../../assets/4C9F00.png); }");
+	ui->playButton->setChecked(false);
 
 	ui->seekbar->setValue(0);
 
