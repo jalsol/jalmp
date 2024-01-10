@@ -21,7 +21,7 @@ class Track:
 
 
     def write_to_db(self):
-        query = text(f"INSERT INTO track (id, title, duration, cover_url, url) VALUES ({self.id}, '{self.title}', {self.duration}, '{self.cover_url}', '{self.url}')")
+        query = text(f"REPLACE INTO track (id, title, duration, cover_url, url) VALUES ({self.id}, '{self.title}', {self.duration}, '{self.cover_url}', '{self.url}')")
         print(query)
         if WRITE_TO_DB:
             conn.execute(query)
@@ -35,7 +35,7 @@ class Artist:
         self.cover_url = f"/assets/artist_cover/{self.key}.jpg"
 
     def write_to_db(self):
-        query = text(f"INSERT INTO artist (id, name, cover_url) VALUES ({self.id}, '{self.name}', '{self.cover_url}')")
+        query = text(f"REPLACE INTO artist (id, name, cover_url) VALUES ({self.id}, '{self.name}', '{self.cover_url}')")
         print(query)
         if WRITE_TO_DB:
             conn.execute(query)
@@ -49,7 +49,7 @@ class Playlist:
         self.cover_url = f"/assets/cover/{self.key}.jpg"
 
     def write_to_db(self):
-        query = text(f"INSERT INTO playlist (id, name, cover_url) VALUES ({self.id}, '{self.name}', '{self.cover_url}')")
+        query = text(f"REPLACE INTO playlist (id, name, cover_url) VALUES ({self.id}, '{self.name}', '{self.cover_url}')")
         print(query)
         if WRITE_TO_DB:
             conn.execute(query)
@@ -126,7 +126,7 @@ def insert_relationships():
             artist_id = find_artist_id(row[0])
             track_id = find_track_id(row[1])
 
-            query = text(f"INSERT INTO artist_track (artist_id, track_id, artist_priority, track_priority) VALUES ({artist_id}, {track_id}, {row[2]}, {row[3]})")
+            query = text(f"REPLACE INTO artist_track (artist_id, track_id, artist_priority, track_priority) VALUES ({artist_id}, {track_id}, {row[2]}, {row[3]})")
             print(query)
             if WRITE_TO_DB:
                 conn.execute(query)
@@ -140,7 +140,7 @@ def insert_relationships():
             artist_id = find_artist_id(row[0])
             playlist_id = find_playlist_id(row[1])
 
-            query = text(f"INSERT INTO artist_playlist (artist_id, playlist_id, playlist_priority) VALUES ({artist_id}, {playlist_id}, {row[2]})")
+            query = text(f"REPLACE INTO artist_playlist (artist_id, playlist_id, playlist_priority) VALUES ({artist_id}, {playlist_id}, {row[2]})")
             print(query)
             if WRITE_TO_DB:
                 conn.execute(query)
@@ -154,7 +154,7 @@ def insert_relationships():
             playlist_id = find_playlist_id(row[0])
             track_id = find_track_id(row[1])
 
-            query = text(f"INSERT INTO playlist_track (playlist_id, track_id, track_priority) VALUES ({playlist_id}, {track_id}, {row[2]})")
+            query = text(f"REPLACE INTO playlist_track (playlist_id, track_id, track_priority) VALUES ({playlist_id}, {track_id}, {row[2]})")
             print(query)
             if WRITE_TO_DB:
                 conn.execute(query)
