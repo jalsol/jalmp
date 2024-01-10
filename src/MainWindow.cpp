@@ -114,9 +114,11 @@ void MainWindow::onSeekbarReleased() {
 void MainWindow::onVolumeValueChanged(int value) {
 	player->setVolume(value);
 	if (player->isMuted()) {
-		ui->muteButton->setChecked(true);
+		ui->muteButton->setStyleSheet(
+			"QPushButton { border-image: url(../../assets/4B8068.png); }");
 	} else {
-		ui->muteButton->setChecked(false);
+		ui->muteButton->setStyleSheet(
+			"QPushButton { border-image: url(../../assets/4B9660.png); }");
 	}
 }
 
@@ -158,9 +160,11 @@ void MainWindow::onMuteButtonClicked() {
 	player->toggleMuteVolume();
 
 	if (player->isMuted()) {
+		ui->volume->setValue(0);
 		ui->muteButton->setStyleSheet(
 			"QPushButton { border-image: url(../../assets/4B8068.png); }");
 	} else {
+		ui->volume->setValue(player->volume());
 		ui->muteButton->setStyleSheet(
 			"QPushButton { border-image: url(../../assets/4B9660.png); }");
 	}

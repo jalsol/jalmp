@@ -22,10 +22,10 @@ public:
 	Track* nextTrack();
 	PlaylistId playlistId() const;
 
-public slots:
-	void setVolume(int volume);
+	int volume() const;
 	void toggleMuteVolume();
 	void cacheVolume();
+	void setVolume(int volume);
 
 private:
 	MediaPlayer();

@@ -15,15 +15,17 @@ MediaPlayer *MediaPlayer::instance() {
 }
 
 void MediaPlayer::setVolume(int volume) {
-	mVolume = volume;
-	audioOutput->setVolume(volume / 100.F);
-
 	if (volume == 0) {
 		mMute = true;
 	} else {
 		mMute = false;
 	}
+
+	mVolume = volume;
+	audioOutput->setVolume(volume / 100.F);
 }
+
+int MediaPlayer::volume() const { return mVolume; }
 
 bool MediaPlayer::isMuted() const { return mMute; }
 
@@ -51,14 +53,14 @@ Track *MediaPlayer::nextTrack() {
 PlaylistId MediaPlayer::playlistId() const { return mPlaylistId; }
 
 void MediaPlayer::toggleMuteVolume() {
-	if (!mMute) {
-		mCachedVolume = mVolume;
-		mVolume = 0;
-	} else {
-		mVolume = mCachedVolume;
-	}
+	mMute = !mMute;
 
-	setVolume(mVolume);
+	if (mMute) {
+		cacheVolume();
+		setVolume(0);
+	} else {
+		setVolume(mCachedVolume);
+	}
 }
 
 void MediaPlayer::cacheVolume() {
