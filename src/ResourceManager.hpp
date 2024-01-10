@@ -8,11 +8,11 @@
 #include "Types.hpp"
 
 #include <QList>
-#include <QPair>
 #include <QtSql>
 #include <list>
 
-class ResourceManager {
+class ResourceManager : public QObject {
+	Q_OBJECT
 public:
 	static ResourceManager& instance();
 	Artist* getArtist(ArtistId id);
@@ -29,7 +29,11 @@ public:
 	Artist* getArtistByPlaylist(PlaylistId playlistId);
 	QList<Track*> getAllFavoriteTracks();
 
+public slots:
 	void setTrackFavorite(TrackId trackId, bool favourite);
+
+signals:
+	void trackFavoriteChanged(TrackId trackId, bool favorite);
 
 private:
 	ResourceManager();

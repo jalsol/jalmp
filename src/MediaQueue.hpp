@@ -4,9 +4,12 @@
 #include "Track.hpp"
 #include "Types.hpp"
 
+#include <QObject>
+#include <QPair>
 #include <QQueue>
 
-class MediaQueue {
+class MediaQueue : public QObject {
+	Q_OBJECT
 public:
 	static MediaQueue& instance();
 
@@ -15,25 +18,29 @@ public:
 	MediaQueue(MediaQueue&&) = delete;
 	MediaQueue& operator=(MediaQueue&&) = delete;
 
-	QQueue<Track*> userQueue() const;
-	QQueue<Track*> systemQueue() const;
+	QQueue<Track*> queue(QueueType queueType) const;
+	PlaylistId playlistId() const;
 
 	void setPlaylist(PlaylistId playlistId);
-	void setPlaylist(const QList<Track*>& playlist);
+	void setPlaylist(PlaylistId playlistId, const QList<Track*>& playlist);
 	void addTrack(TrackId trackId);
-	void removeFromUser(TrackId trackId);
-	void removeFromSystem(TrackId trackId);
+	void addTrackAt(TrackId trackId, int index);
+	QPair<Track*, int> removeFromQueue(QueueType queueType, TrackId trackId);
+	void moveUp(QueueType queueType, TrackId trackId);
+	void moveDown(QueueType queueType, TrackId trackId);
 	void refillSystemQueue();
 
 	Track* next();
-	Track* skipUserUntil(TrackId trackId);
-	Track* skipSystemUntil(TrackId trackId);
+	Track* skipUntil(QueueType queueType, TrackId trackId);
+	Track* skipPast(QueueType queueType, TrackId trackId);
+
+signals:
+	void queueChanged(QueueType queueType);
 
 private:
-	MediaQueue() = default;
+	MediaQueue();
 
-	QQueue<Track*> mUserQueue;
-	QQueue<Track*> mSystemQueue;
+	QQueue<Track*> mQueue[2];
 
 	QList<Track*> mLoopingPlaylist;
 	int mLastLoopingIdx;

@@ -9,7 +9,8 @@
 class DeleteQueueButton : public QPushButton {
 public:
 	DeleteQueueButton(QWidget *parent = nullptr);
-	DeleteQueueButton(TrackId trackId, QWidget *parent = nullptr);
+	DeleteQueueButton(int queueType, TrackId trackId,
+					  QWidget *parent = nullptr);
 
 public slots:
 	void deleteFromQueue();
@@ -19,6 +20,7 @@ private:
 
 	TrackId mTrackId;
 	QString mPath;
+	int mQueueType;
 };
 
 #endif // DELETEQUEUEBUTTON_H

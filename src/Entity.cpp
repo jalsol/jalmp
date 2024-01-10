@@ -8,6 +8,8 @@ QString Entity::cover() const { return mCover; }
 
 EntityType Entity::type() const { return EntityType::Default; }
 
+bool Entity::isFavorite() const { return false; }
+
 QString Entity::typeToString(EntityType type) {
 	switch (type) {
 	case EntityType::Artist:

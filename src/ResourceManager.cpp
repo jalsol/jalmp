@@ -1,6 +1,7 @@
 #include "ResourceManager.hpp"
 
 #include "ArtistBuilder.hpp"
+#include "Navigator.hpp"
 #include "PlaylistBuilder.hpp"
 #include "TrackBuilder.hpp"
 
@@ -20,6 +21,9 @@ ResourceManager::ResourceManager() {
 	mDatabase.setPassword(input.c_str());
 
 	Q_ASSERT(mDatabase.open());
+
+	connect(Navigator::instance(), &Navigator::toggledFavorite, this,
+			&ResourceManager::setTrackFavorite);
 }
 
 ResourceManager::~ResourceManager() { mDatabase.close(); }
@@ -341,7 +345,7 @@ void ResourceManager::setTrackFavorite(TrackId trackId, bool favorite) {
 		qDebug() << "Track favorite set to" << favorite;
 		mDatabase.commit();
 		getTrack(trackId)->setFavorite(favorite);
-		// TODO: emit trackFavoriteChanged(trackId, favorite);
+		emit trackFavoriteChanged(trackId, favorite);
 	} else {
 		qDebug() << "Error while setting track favorite";
 	}

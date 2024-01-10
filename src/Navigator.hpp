@@ -22,7 +22,15 @@ signals:
 	void navigatedToArtist(ArtistId artistId);
 	void navigatedToPlaylist(PlaylistId playlistId);
 	void navigatedToTrack(PlaylistId playlistId, TrackId trackId);
+	void navigatedToHome();
+	void navigatedToSearch();
+
 	void toggledFavorite(TrackId trackId, bool favorite);
+
+	void queueAdded(TrackId trackId);
+	void queueDeleted(QueueType queueType, TrackId trackId);
+	void queueUp(QueueType queueType, TrackId trackId);
+	void queueDown(QueueType queueType, TrackId trackId);
 
 private:
 	Navigator() = default;

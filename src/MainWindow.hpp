@@ -36,12 +36,12 @@ private slots:
 	void onViewOriginButtonClicked();
 
 	void onSidebarTitleLinkActivated(const QString &link);
-	// void resetCheckSidebarButtons();
 
 	void onNavigatedToArtist(ArtistId artistId);
 	void onNavigatedToPlaylist(PlaylistId playlistId);
 	void onNavigatedToTrack(PlaylistId playlistId, TrackId trackId);
-	void onToggledFavorite(TrackId trackId, bool favorite);
+	void onNavigatedToHome();
+	void onNavigatedToSearch();
 
 	void update();
 	void playTrack(Track *track);

@@ -1,5 +1,6 @@
 #include "MediaQueue.hpp"
 
+#include "Navigator.hpp"
 #include "ResourceManager.hpp"
 
 MediaQueue& MediaQueue::instance() {
@@ -7,9 +8,19 @@ MediaQueue& MediaQueue::instance() {
 	return instance;
 }
 
-QQueue<Track*> MediaQueue::userQueue() const { return mUserQueue; }
+MediaQueue::MediaQueue() {
+	auto nav = Navigator::instance();
+	connect(nav, &Navigator::queueUp, this, &MediaQueue::moveUp);
+	connect(nav, &Navigator::queueDown, this, &MediaQueue::moveDown);
+	connect(nav, &Navigator::queueDeleted, this, &MediaQueue::removeFromQueue);
+	connect(nav, &Navigator::queueAdded, this, &MediaQueue::addTrack);
+}
 
-QQueue<Track*> MediaQueue::systemQueue() const { return mSystemQueue; }
+QQueue<Track*> MediaQueue::queue(QueueType queueType) const {
+	return mQueue[queueType];
+}
+
+PlaylistId MediaQueue::playlistId() const { return mPlaylistId; }
 
 void MediaQueue::setPlaylist(PlaylistId playlistId) {
 	if (mPlaylistId != playlistId) {
@@ -19,84 +30,128 @@ void MediaQueue::setPlaylist(PlaylistId playlistId) {
 	}
 
 	mLastLoopingIdx = mLoopingPlaylist.size() - 1;
-	mSystemQueue.clear();
-	mSystemQueue.append(mLoopingPlaylist);
+	mQueue[System].clear();
+	mQueue[System].append(mLoopingPlaylist);
+	emit queueChanged(System);
 }
 
-void MediaQueue::setPlaylist(const QList<Track*>& playlist) {
-	mPlaylistId = PlaylistId::Invalid;
+void MediaQueue::setPlaylist(PlaylistId playlistId,
+							 const QList<Track*>& playlist) {
+	mPlaylistId = playlistId;
 	mLoopingPlaylist.clear();
 	mLoopingPlaylist.append(playlist);
 	mLastLoopingIdx = mLoopingPlaylist.size() - 1;
 
-	mSystemQueue.clear();
-	mSystemQueue.append(mLoopingPlaylist);
+	mQueue[System].clear();
+	mQueue[System].append(mLoopingPlaylist);
+	emit queueChanged(System);
 }
 
 void MediaQueue::addTrack(TrackId trackId) {
+	addTrackAt(trackId, mQueue[User].size());
+}
+
+void MediaQueue::addTrackAt(TrackId trackId, int index) {
 	ResourceManager& rm = ResourceManager::instance();
 	Track* track = rm.getTrack(trackId);
-	mUserQueue.append(track);
+	mQueue[User].insert(index, track);
+	emit queueChanged(User);
 }
 
-void MediaQueue::removeFromUser(TrackId trackId) {
-	for (auto it = mUserQueue.begin(); it != mUserQueue.end(); ++it) {
+QPair<Track*, int> MediaQueue::removeFromQueue(QueueType queueType,
+											   TrackId trackId) {
+	int idx = 0;
+	auto& queue = mQueue[queueType];
+
+	for (auto it = queue.begin(); it != queue.end(); ++it, ++idx) {
 		if ((*it)->id() == trackId) {
-			mUserQueue.erase(it);
-			break;
+			auto ret = qMakePair(*it, idx);
+			queue.erase(it);
+			emit queueChanged(queueType);
+			return ret;
 		}
 	}
+
+	return qMakePair(nullptr, -1);
 }
 
-void MediaQueue::removeFromSystem(TrackId trackId) {
-	for (auto it = mSystemQueue.begin(); it != mSystemQueue.end(); ++it) {
-		if ((*it)->id() == trackId) {
-			mSystemQueue.erase(it);
-			break;
-		}
+void MediaQueue::moveUp(QueueType queueType, TrackId trackId) {
+	auto [track, idx] = removeFromQueue(queueType, trackId);
+	if (track) {
+		mQueue[queueType].insert(idx - 1, track);
 	}
+
+	emit queueChanged(queueType);
+}
+
+void MediaQueue::moveDown(QueueType queueType, TrackId trackId) {
+	auto [track, idx] = removeFromQueue(queueType, trackId);
+	if (track) {
+		mQueue[queueType].insert(idx + 1, track);
+	}
+
+	emit queueChanged(queueType);
 }
 
 void MediaQueue::refillSystemQueue() {
-	while (mSystemQueue.size() < mLoopingPlaylist.size()) {
+	while (mQueue[System].size() < mLoopingPlaylist.size()) {
 		mLastLoopingIdx = (mLastLoopingIdx + 1) % mLoopingPlaylist.size();
-		mSystemQueue.append(mLoopingPlaylist[mLastLoopingIdx]);
+		mQueue[System].append(mLoopingPlaylist[mLastLoopingIdx]);
 	}
+
+	emit queueChanged(System);
 }
 
 Track* MediaQueue::next() {
-	if (!mUserQueue.empty()) {
-		return mOnRepeat ? mUserQueue.first() : mUserQueue.takeFirst();
+	if (!mQueue[User].empty()) {
+		if (mOnRepeat) {
+			return mQueue[User].first();
+		} else {
+			Track* track = mQueue[User].takeFirst();
+			emit queueChanged(User);
+			return track;
+		}
 	}
 
 	refillSystemQueue();
-	return mOnRepeat ? mSystemQueue.first() : mSystemQueue.takeFirst();
+
+	if (mOnRepeat) {
+		return mQueue[System].first();
+	} else {
+		Track* track = mQueue[System].takeFirst();
+		emit queueChanged(System);
+		return track;
+	}
 }
 
-Track* MediaQueue::skipUserUntil(TrackId trackId) {
-	while (!mUserQueue.empty()) {
-		Track* track = mUserQueue.first();
+Track* MediaQueue::skipUntil(QueueType queueType, TrackId trackId) {
+	while (!mQueue[queueType].empty()) {
+		Track* track = mQueue[queueType].first();
 		if (track->id() == trackId) {
 			return track;
 		}
 
-		mUserQueue.takeFirst();
+		mQueue[queueType].takeFirst();
 	}
+
+	emit queueChanged(queueType);
 
 	return nullptr;
 }
 
-Track* MediaQueue::skipSystemUntil(TrackId trackId) {
-	refillSystemQueue();
-
-	while (!mSystemQueue.empty()) {
-		Track* track = mSystemQueue.first();
+Track* MediaQueue::skipPast(QueueType queueType, TrackId trackId) {
+	while (!mQueue[queueType].empty()) {
+		Track* track = mQueue[queueType].first();
 		if (track->id() == trackId) {
+			mQueue[queueType].takeFirst();
+			emit queueChanged(queueType);
 			return track;
 		}
 
-		mSystemQueue.takeFirst();
+		mQueue[queueType].takeFirst();
 	}
+
+	emit queueChanged(queueType);
 
 	return nullptr;
 }

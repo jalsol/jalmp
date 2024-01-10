@@ -30,6 +30,7 @@ public:
 private:
 	MediaPlayer();
 	~MediaPlayer();
+	void loadTrack(Track* track);
 
 	QAudioOutput* audioOutput = new QAudioOutput();
 	bool mMute = false;
@@ -37,7 +38,7 @@ private:
 	int mCachedVolume = -1;
 	PlaylistId mPlaylistId = PlaylistId::Invalid;
 	TrackId mTrackId = TrackId::Invalid;
-	Track* mPlayingTrack = nullptr;
+	// Track* mPlayingTrack = nullptr;
 };
 
 #endif // MEDIAPLAYER_HPP

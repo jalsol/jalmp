@@ -9,7 +9,7 @@
 class DownQueueButton : public QPushButton {
 public:
 	DownQueueButton(QWidget *parent = nullptr);
-	DownQueueButton(TrackId trackId, QWidget *parent = nullptr);
+	DownQueueButton(int queueType, TrackId trackId, QWidget *parent = nullptr);
 
 public slots:
 	void downFromQueue();
@@ -19,6 +19,7 @@ private:
 
 	TrackId mTrackId;
 	QString mPath;
+	int mQueueType;
 };
 
 #endif // DOWNQUEUEBUTTON_HPP

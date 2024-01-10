@@ -1,6 +1,8 @@
 #include "SearchPage.hpp"
 
+#include "AddQueueButton.hpp"
 #include "EntityListButton.hpp"
+#include "FavoriteButton.hpp"
 #include "IndexLabel.hpp"
 #include "MediaQueue.hpp"
 #include "ResourceManager.hpp"
@@ -42,13 +44,13 @@ void SearchListCapture::fill() {
 		}
 		return tracks;
 	}();
-	MediaQueue::instance().setPlaylist(tracks);
+	MediaQueue::instance().setPlaylist(PlaylistId::Search, tracks);
 
 	QGridLayout *layout = new QGridLayout{get()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
 
-	for (int col = 0; col < 2; ++col) {
+	for (int col = 0; col < 4; ++col) {
 		layout->setColumnStretch(col, 1);
 	}
 
@@ -63,6 +65,20 @@ void SearchListCapture::fill() {
 		{
 			auto *trackButton = new EntityListButton(entity);
 			layout->addWidget(trackButton, row, col++, Qt::AlignTop);
+		}
+
+		if (entity->type() == EntityType::Track) {
+			Track *_entity = (Track *)entity;
+			{
+				auto *favoriteButton = new FavoriteButton(
+					(qint64)_entity->id(), _entity->isFavorite());
+				layout->addWidget(favoriteButton, row, col++, Qt::AlignTop);
+			}
+			{
+				auto *addQueueButton =
+					new AddQueueButton((qint64)_entity->id());
+				layout->addWidget(addQueueButton, row, col++, Qt::AlignTop);
+			}
 		}
 
 		++row;

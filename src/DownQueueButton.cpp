@@ -6,8 +6,10 @@ DownQueueButton::DownQueueButton(QWidget *parent) : QPushButton(parent) {
 	connect(this, &QPushButton::clicked, this, &DownQueueButton::downFromQueue);
 }
 
-DownQueueButton::DownQueueButton(TrackId trackId, QWidget *parent)
+DownQueueButton::DownQueueButton(int queueType, TrackId trackId,
+								 QWidget *parent)
 	: DownQueueButton(parent) {
+	mQueueType = queueType;
 	mTrackId = trackId;
 
 	// setStyleSheet(
@@ -23,5 +25,6 @@ void DownQueueButton::downFromQueue() {
 }
 
 void DownQueueButton::setInternalState() {
-	mPath = QString("queue_down/%1").arg(mTrackId);
+	mPath = QString("queue_down/%1/%2")
+				.arg(QString::number(mTrackId), QString::number(mQueueType));
 }

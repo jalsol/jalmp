@@ -11,7 +11,7 @@ public:
 	QTime duration() const;
 	EntityType type() const override;
 	QString url() const;
-	bool isFavorite() const;
+	bool isFavorite() const override;
 
 private:
 	friend class TrackBuilder;

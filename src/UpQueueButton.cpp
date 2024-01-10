@@ -6,8 +6,9 @@ UpQueueButton::UpQueueButton(QWidget *parent) : QPushButton(parent) {
 	connect(this, &QPushButton::clicked, this, &UpQueueButton::upFromQueue);
 }
 
-UpQueueButton::UpQueueButton(TrackId trackId, QWidget *parent)
+UpQueueButton::UpQueueButton(int queueType, TrackId trackId, QWidget *parent)
 	: UpQueueButton(parent) {
+	mQueueType = queueType;
 	mTrackId = trackId;
 
 	// setStyleSheet(
@@ -21,5 +22,6 @@ UpQueueButton::UpQueueButton(TrackId trackId, QWidget *parent)
 void UpQueueButton::upFromQueue() { Navigator::instance()->navigateTo(mPath); }
 
 void UpQueueButton::setInternalState() {
-	mPath = QString("queue_up/%1").arg(mTrackId);
+	mPath = QString("queue_up/%1/%2")
+				.arg(QString::number(mTrackId), QString::number(mQueueType));
 }

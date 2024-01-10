@@ -6,6 +6,7 @@
 #include "FavoriteButton.hpp"
 #include "IndexLabel.hpp"
 #include "MediaQueue.hpp"
+#include "Navigator.hpp"
 #include "ResourceManager.hpp"
 
 #include <QGridLayout>
@@ -23,27 +24,27 @@ void TrackListCapture::loadTrackFrom(EntityId id, EntityType type) {
 
 	mId = id;
 	mType = type;
+
 	reload();
 }
 
 void TrackListCapture::fill() {
-	ResourceManager &rm = ResourceManager::instance();
-
-	QList<Track *> tracks = (mType == EntityType::Playlist)
-								? rm.getTracksByPlaylist((qint64)mId)
-								: rm.getTracksByArtist((qint64)mId);
-	MediaQueue::instance().setPlaylist(tracks);
-
 	QGridLayout *layout = new QGridLayout{get()};
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
+
+	ResourceManager &rm = ResourceManager::instance();
+
+	mTracks = (mType == EntityType::Playlist)
+				  ? rm.getTracksByPlaylist((qint64)mId)
+				  : rm.getTracksByArtist((qint64)mId);
 
 	for (int col = 0; col < 4; ++col) {
 		layout->setColumnStretch(col, 1);
 	}
 
 	int row = 0;
-	for (auto *track : tracks) {
+	for (auto *track : mTracks) {
 		int col = 0;
 		{
 			auto *idLabel = new IndexLabel(row + 1);
@@ -60,7 +61,8 @@ void TrackListCapture::fill() {
 			if (mType == EntityType::Playlist) {
 				trackButton = new EntityListButton(track, (qint64)mId);
 			} else {
-				trackButton = new EntityListButton(track);
+				trackButton =
+					new EntityListButton(track, PlaylistId::Tracklist);
 			}
 			layout->addWidget(trackButton, row, col++, Qt::AlignTop);
 		}
@@ -91,7 +93,17 @@ QPair<EntityId, EntityType> TrackListCapture::id() const {
 	return {mId, mType};
 }
 
-TrackListPage::TrackListPage(QWidget *parent) : Page(parent) {}
+void TrackListCapture::loadTracksToQueue() {
+	MediaQueue::instance().setPlaylist(PlaylistId::Tracklist, mTracks);
+}
+
+TrackListPage::TrackListPage(QWidget *parent) : Page(parent) {
+	connect(&ResourceManager::instance(),
+			&ResourceManager::trackFavoriteChanged, this,
+			&TrackListPage::reload);
+	connect(Navigator::instance(), &Navigator::navigatedToTrack, this,
+			&TrackListPage::onNavigatedToTrack);
+}
 
 void TrackListPage::fill(EntityId id, EntityType type) {
 	ResourceManager &rm = ResourceManager::instance();
@@ -112,3 +124,9 @@ void TrackListPage::fill(EntityId id, EntityType type) {
 QPair<EntityId, EntityType> TrackListPage::id() const { return mList.id(); }
 
 void TrackListPage::reload() { mList.reload(); }
+
+void TrackListPage::onNavigatedToTrack(PlaylistId playlistId, TrackId trackId) {
+	if (playlistId == PlaylistId::Tracklist) {
+		mList.loadTracksToQueue();
+	}
+}

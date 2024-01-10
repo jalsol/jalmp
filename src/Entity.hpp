@@ -13,6 +13,7 @@ public:
 	virtual EntityType type() const;
 
 	static QString typeToString(EntityType type);
+	virtual bool isFavorite() const;
 
 protected:
 	virtual void setId(EntityId id);

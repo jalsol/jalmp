@@ -2,6 +2,7 @@
 #include "./ui_MainWindow.h"
 
 #include "FavoriteButton.hpp"
+// #include "MediaQueue.hpp"
 #include "MediaSlider.hpp"
 #include "ResourceManager.hpp"
 
@@ -59,8 +60,10 @@ MainWindow::MainWindow(QWidget *parent)
 			&MainWindow::onNavigatedToPlaylist);
 	connect(navigator, &Navigator::navigatedToTrack, this,
 			&MainWindow::onNavigatedToTrack);
-	connect(navigator, &Navigator::toggledFavorite, this,
-			&MainWindow::onToggledFavorite);
+	connect(navigator, &Navigator::navigatedToHome, this,
+			&MainWindow::onNavigatedToHome);
+	connect(navigator, &Navigator::navigatedToSearch, this,
+			&MainWindow::onNavigatedToSearch);
 
 	connect(ui->viewTracklistOriginButton, &QPushButton::clicked, this,
 			&MainWindow::onViewOriginButtonClicked);
@@ -219,11 +222,12 @@ void MainWindow::onNavigatedToTrack(PlaylistId playlistId, TrackId trackId) {
 	playTrack(track);
 }
 
-void MainWindow::onToggledFavorite(TrackId trackId, bool favorite) {
-	ResourceManager::instance().setTrackFavorite(trackId, favorite);
-	ui->tracklistPage->reload();
-	ui->homePage->fillFavorites();
-	ui->homePage->fillQueues();
+void MainWindow::onNavigatedToSearch() {
+	ui->stackedWidget->setCurrentIndex(Search);
+}
+
+void MainWindow::onNavigatedToHome() {
+	ui->stackedWidget->setCurrentIndex(Home);
 }
 
 void MainWindow::onSidebarTitleLinkActivated(const QString &link) {

@@ -9,7 +9,7 @@
 class UpQueueButton : public QPushButton {
 public:
 	UpQueueButton(QWidget *parent = nullptr);
-	UpQueueButton(TrackId trackId, QWidget *parent = nullptr);
+	UpQueueButton(int queueType, TrackId trackId, QWidget *parent = nullptr);
 
 public slots:
 	void upFromQueue();
@@ -19,6 +19,7 @@ private:
 
 	TrackId mTrackId;
 	QString mPath;
+	int mQueueType;
 };
 
 #endif // UPQUEUEBUTTON_H

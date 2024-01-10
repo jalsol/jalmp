@@ -1,6 +1,7 @@
 #include "MediaPlayer.hpp"
 
 #include "MediaQueue.hpp"
+#include "ResourceManager.hpp"
 
 MediaPlayer::MediaPlayer() {
 	setAudioOutput(audioOutput);
@@ -30,24 +31,43 @@ int MediaPlayer::volume() const { return mVolume; }
 bool MediaPlayer::isMuted() const { return mMute; }
 
 Track *MediaPlayer::invokeTrack(PlaylistId playlistId, TrackId trackId) {
-	if (mPlaylistId == playlistId && mTrackId == trackId) {
-		return mPlayingTrack;
+	MediaQueue &queue = MediaQueue::instance();
+	ResourceManager &rm = ResourceManager::instance();
+
+	bool fromUserQueue = playlistId == PlaylistId::UserQueue;
+	bool fromFavoriteQueue = playlistId == PlaylistId::Favorites;
+
+	if (!fromUserQueue) {
+		if (fromFavoriteQueue) {
+			queue.setPlaylist(playlistId, rm.getAllFavoriteTracks());
+		} else {
+			queue.setPlaylist(playlistId);
+		}
 	}
 
-	MediaQueue &queue = MediaQueue::instance();
-	mPlaylistId = playlistId;
-	mTrackId = trackId;
+	if (fromUserQueue) {
+		queue.skipPast(QueueType::User, trackId);
+	} else {
+		queue.skipPast(QueueType::System, trackId);
+		queue.refillSystemQueue();
+	}
 
-	queue.setPlaylist(playlistId);
-	queue.skipSystemUntil(trackId);
-	return mPlayingTrack = nextTrack();
+	// mTrackId = trackId;
+
+	Track *track = rm.getTrack(trackId);
+	loadTrack(track);
+	return track;
 }
 
 Track *MediaPlayer::nextTrack() {
 	MediaQueue &queue = MediaQueue::instance();
 	Track *track = queue.next();
-	setSource(QUrl::fromLocalFile("../.." + track->url()));
+	loadTrack(track);
 	return track;
+}
+
+void MediaPlayer::loadTrack(Track *track) {
+	setSource(QUrl::fromLocalFile("../.." + track->url()));
 }
 
 PlaylistId MediaPlayer::playlistId() const { return mPlaylistId; }

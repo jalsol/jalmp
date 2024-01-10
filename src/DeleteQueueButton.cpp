@@ -9,8 +9,10 @@ DeleteQueueButton::DeleteQueueButton(QWidget *parent) : QPushButton(parent) {
 			&DeleteQueueButton::deleteFromQueue);
 }
 
-DeleteQueueButton::DeleteQueueButton(TrackId trackId, QWidget *parent)
+DeleteQueueButton::DeleteQueueButton(int queueType, TrackId trackId,
+									 QWidget *parent)
 	: DeleteQueueButton(parent) {
+	mQueueType = queueType;
 	mTrackId = trackId;
 
 	static const QIcon icon = QIcon("../../assets/24F050.png");
@@ -25,5 +27,6 @@ void DeleteQueueButton::deleteFromQueue() {
 }
 
 void DeleteQueueButton::setInternalState() {
-	mPath = QString("queue_delete/%1").arg(mTrackId);
+	mPath = QString("queue_delete/%1/%2")
+				.arg(QString::number(mTrackId), QString::number(mQueueType));
 }

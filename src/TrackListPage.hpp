@@ -3,6 +3,7 @@
 
 #include "Page.hpp"
 #include "ScrollListCapture.hpp"
+#include "Track.hpp"
 #include "Types.hpp"
 #include "WidgetCapture.hpp"
 
@@ -18,10 +19,13 @@ public:
 	void loadTrackFrom(EntityId id, EntityType type);
 	QPair<EntityId, EntityType> id() const;
 
+	void loadTracksToQueue();
+
 private:
 	void fill() override;
 	EntityId mId;
 	EntityType mType;
+	QList<Track *> mTracks;
 };
 
 class TrackListPage : public Page {
@@ -30,6 +34,9 @@ public:
 	void fill(EntityId id, EntityType type);
 	QPair<EntityId, EntityType> id() const;
 	void reload();
+
+public slots:
+	void onNavigatedToTrack(PlaylistId playlistId, TrackId trackId);
 
 private:
 	using LabelCapture = WidgetCapture<QLabel>;

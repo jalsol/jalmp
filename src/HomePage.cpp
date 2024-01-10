@@ -17,8 +17,9 @@
 QueueListCapture::QueueListCapture(QWidget *parent)
 	: ScrollListCapture(parent) {}
 
-QueueListCapture::QueueListCapture(const QString &capture, QWidget *parent)
-	: ScrollListCapture(capture, parent) {}
+QueueListCapture::QueueListCapture(int queueType, const QString &capture,
+								   QWidget *parent)
+	: ScrollListCapture(capture, parent), mQueueType(queueType) {}
 
 void QueueListCapture::loadQueue(const QQueue<Track *> &queue) {
 	mQueue = queue;
@@ -30,7 +31,7 @@ void QueueListCapture::fill() {
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 0, 0, 0);
 
-	for (int col = 0; col < 7; ++col) {
+	for (int col = 0; col < 8; ++col) {
 		layout->setColumnStretch(col, 1);
 	}
 
@@ -49,7 +50,11 @@ void QueueListCapture::fill() {
 		}
 
 		{
-			auto *button = new EntityListButton(track);
+			PlaylistId playlistId = mQueueType == QueueType::User
+										? PlaylistId::UserQueue
+										: PlaylistId::Favorites;
+
+			auto *button = new EntityListButton(track, (qint64)playlistId);
 			layout->addWidget(button, row, col++, Qt::AlignTop);
 		}
 
@@ -60,18 +65,25 @@ void QueueListCapture::fill() {
 		}
 
 		{
-			auto *deleteButton = new DeleteQueueButton((qint64)track->id());
+			auto *deleteButton =
+				new DeleteQueueButton(mQueueType, (qint64)track->id());
 			layout->addWidget(deleteButton, row, col++, Qt::AlignTop);
 		}
 
 		{
-			auto *upButton = new UpQueueButton((qint64)track->id());
+			auto *upButton = new UpQueueButton(mQueueType, (qint64)track->id());
 			layout->addWidget(upButton, row, col++, Qt::AlignTop);
 		}
 
 		{
-			auto *downButton = new DownQueueButton((qint64)track->id());
+			auto *downButton =
+				new DownQueueButton(mQueueType, (qint64)track->id());
 			layout->addWidget(downButton, row, col++, Qt::AlignTop);
+		}
+
+		{
+			auto *addButton = new AddQueueButton((qint64)track->id());
+			layout->addWidget(addButton, row, col++, Qt::AlignTop);
 		}
 
 		++row;
@@ -95,7 +107,6 @@ void FavoriteListCapture::loadFavorites() {
 	qDebug() << "loading favorites";
 	ResourceManager &rm = ResourceManager::instance();
 	mFavorites = rm.getAllFavoriteTracks();
-	MediaQueue::instance().setPlaylist(mFavorites);
 	reload();
 }
 
@@ -123,7 +134,8 @@ void FavoriteListCapture::fill() {
 		}
 
 		{
-			EntityListButton *trackButton = new EntityListButton(track);
+			EntityListButton *trackButton =
+				new EntityListButton(track, PlaylistId::Favorites);
 			layout->addWidget(trackButton, row, col++, Qt::AlignTop);
 		}
 
@@ -149,12 +161,34 @@ void FavoriteListCapture::fill() {
 	get()->setLayout(layout);
 }
 
-HomePage::HomePage(QWidget *parent) : Page(parent) {}
+HomePage::HomePage(QWidget *parent) : Page(parent) {
+	connect(&MediaQueue::instance(), &MediaQueue::queueChanged, this,
+			&HomePage::fillQueue);
+	connect(&ResourceManager::instance(),
+			&ResourceManager::trackFavoriteChanged, this,
+			&HomePage::onTrackFavoriteChanged);
+}
 
 void HomePage::fillQueues() {
+	fillQueue(QueueType::User);
+	fillQueue(QueueType::System);
+}
+
+void HomePage::fillQueue(QueueType queueType) {
 	MediaQueue &queue = MediaQueue::instance();
-	mUserQueueList.loadQueue(queue.userQueue());
-	mSystemQueueList.loadQueue(queue.systemQueue());
+	mQueueList[queueType].loadQueue(queue.queue(queueType));
 }
 
 void HomePage::fillFavorites() { mFavoriteList.loadFavorites(); }
+
+void HomePage::onTrackFavoriteChanged(TrackId trackId, bool isFavorite) {
+	fillFavorites();
+	fillQueue(QueueType::User);
+
+	MediaQueue &queue = MediaQueue::instance();
+	if (queue.playlistId() == PlaylistId::Favorites) {
+		queue.removeFromQueue(QueueType::System, trackId);
+	} else {
+		fillQueue(QueueType::System);
+	}
+}
