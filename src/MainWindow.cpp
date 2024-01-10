@@ -46,8 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
 			&MainWindow::onPlaylistsButtonClicked);
 	connect(ui->artistsButton, &QPushButton::clicked, this,
 			&MainWindow::onArtistsButtonClicked);
-	connect(ui->sidebarTitle, &SidebarTitle::linkActivated, this,
-			&MainWindow::onSidebarTitleLinkActivated);
+	connect(ui->sidebarTitle, &SidebarTitle::linkActivated, navigator,
+			&Navigator::navigateTo);
 
 	connect(ui->searchGoButton, &QPushButton::clicked, ui->searchPage,
 			&SearchPage::onSearchButtonClicked);
@@ -208,7 +208,6 @@ void MainWindow::onNavigatedToArtist(ArtistId artistId) {
 	ui->tracklistPage->fill(artistId, EntityType::Artist);
 	ui->stackedWidget->setCurrentIndex(Tracklist);
 	ui->viewTracklistOriginButton->setText("View Albums");
-	// resetCheckSidebarButtons();
 }
 
 void MainWindow::onNavigatedToPlaylist(PlaylistId playlistId) {
@@ -228,10 +227,6 @@ void MainWindow::onNavigatedToSearch() {
 
 void MainWindow::onNavigatedToHome() {
 	ui->stackedWidget->setCurrentIndex(Home);
-}
-
-void MainWindow::onSidebarTitleLinkActivated(const QString &link) {
-	navigator->navigateTo(link);
 }
 
 void MainWindow::update() {
