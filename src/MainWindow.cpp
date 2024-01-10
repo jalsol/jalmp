@@ -100,7 +100,12 @@ MainWindow::~MainWindow() {
 void MainWindow::onPlayButtonClicked() {
 	auto state = player->playbackState();
 	if (player->source().isEmpty()) {
-		return;
+		Track *track = player->nextTrack();
+		if (track != nullptr) {
+			playTrack(track);
+		} else {
+			return;
+		}
 	}
 
 	if (state == QMediaPlayer::PlayingState) {
