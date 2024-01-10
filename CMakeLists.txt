@@ -6,7 +6,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
@@ -20,6 +20,9 @@ set(PROJECT_SOURCES
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/jalsock/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/jalsock/src)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/jalsock/src)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(jalmp
@@ -62,6 +65,14 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 		src/IndexLabel.hpp src/IndexLabel.cpp
 		src/AddQueueButton.hpp src/AddQueueButton.cpp
 		src/ToggleButton.hpp src/ToggleButton.cpp
+		src/SocketClient.hpp src/SocketClient.cpp
+
+		external/jalsock/src/epoll/epoll.cpp
+		external/jalsock/src/epoll/epoll_event.cpp
+		external/jalsock/src/jalsock.cpp
+		external/jalsock/src/socket/socket.cpp
+		external/jalsock/src/types/addr_info.cpp
+		external/jalsock/src/types/sockaddr.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET jalmp APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

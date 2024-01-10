@@ -1,6 +1,7 @@
 #ifndef MEDIAPLAYER_HPP
 #define MEDIAPLAYER_HPP
 
+#include "SocketClient.hpp"
 #include "Track.hpp"
 #include "Types.hpp"
 

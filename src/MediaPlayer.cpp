@@ -72,7 +72,15 @@ Track *MediaPlayer::nextTrack() {
 }
 
 void MediaPlayer::loadTrack(Track *track) {
-	setSource(QUrl::fromLocalFile("../.." + track->url()));
+	const auto &source =
+		SocketClient::instance().sendRequest(RequestType::Audio, track->url());
+
+	if (source.has_value()) {
+		setSource(QUrl::fromLocalFile("")); // force unload
+		setSource(QUrl::fromLocalFile(*source));
+	} else {
+		qDebug() << "MediaPlayer::loadTrack: source is empty";
+	}
 }
 
 PlaylistId MediaPlayer::playlistId() const { return mPlaylistId; }

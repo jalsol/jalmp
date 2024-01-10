@@ -1,0 +1,8 @@
+[submodule "external/jalsock"]
+	path = external/jalsock
+	url = https://github.com/jaltext/jalsock.git
+	branch = devel-jalmp
+[submodule "jalsock"]
+	path = jalsock
+	url = https://github.com/jaltext/jalsock.git
+	branch = devel-jalmp
