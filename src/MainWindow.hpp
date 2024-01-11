@@ -23,6 +23,7 @@ public:
 private slots:
 	void onPlayButtonClicked();
 	void onSeekbarReleased();
+	void onSeekbarValueChanged(int value);
 	void onVolumeValueChanged(int value);
 	void onRepeatButtonClicked();
 	void onShuffleButtonClicked();

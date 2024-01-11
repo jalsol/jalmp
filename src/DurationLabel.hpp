@@ -6,7 +6,16 @@
 
 class DurationLabel : public QLabel {
 public:
-	DurationLabel(QTime duration);
+	DurationLabel(QWidget *parent = nullptr);
+	DurationLabel(QTime duration, QWidget *parent = nullptr);
+
+	void setDuration(QTime duration);
+	void setDuration(qint64 duration);
+	void increment();
+	void reset();
+
+private:
+	// QTime mDuration;
 };
 
 #endif // DURATIONLABEL_HPP

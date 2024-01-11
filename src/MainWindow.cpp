@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent), ui(new Ui::MainWindow) {
 	ui->setupUi(this);
 	player->init(this);
+	updater->setInterval(500);
 
 	connect(updater, SIGNAL(timeout()), this, SLOT(update()));
 
@@ -23,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->seekbar, &MediaSlider::sliderPressed, updater, &QTimer::stop);
 	connect(ui->seekbar, &MediaSlider::sliderReleased, this,
 			&MainWindow::onSeekbarReleased);
+	connect(ui->seekbar, &MediaSlider::valueChanged, this,
+			&MainWindow::onSeekbarValueChanged);
 
 	connect(ui->volume, &MediaSlider::valueChanged, this,
 			&MainWindow::onVolumeValueChanged);
@@ -161,7 +164,24 @@ void MainWindow::onSeekbarReleased() {
 											  * relativeMousePos.x());
 
 	player->setPosition(newValue);
+	ui->currentTimeLabel->setDuration(player->position());
 	updater->start();
+
+	update();
+}
+
+void MainWindow::onSeekbarValueChanged(int value) {
+	if (value == ui->seekbar->maximum()
+		&& QGuiApplication::mouseButtons() != Qt::LeftButton) {
+		value = 0;
+	}
+
+	const float scale = static_cast<float>(player->duration());
+	const auto newValue =
+		static_cast<qint64>(scale / ui->seekbar->maximum() * value);
+
+	ui->seekbar->setValue(value);
+	ui->currentTimeLabel->setDuration(newValue);
 }
 
 void MainWindow::onVolumeValueChanged(int value) {
@@ -295,17 +315,17 @@ void MainWindow::onNavigatedToHome() {
 }
 
 void MainWindow::update() {
-	if (player->playbackState() != QMediaPlayer::PlayingState) {
-		return;
-	}
-
 	const float scale = static_cast<float>(ui->seekbar->maximum());
 	qint64 newValue =
 		static_cast<qint64>(scale / player->duration() * player->position());
 
-	if (newValue + 1 == ui->seekbar->maximum()) {
+	if (newValue == ui->seekbar->maximum()) {
 		newValue = 0;
+
+		qDebug() << "next track";
+
 		if (player->loops() == QMediaPlayer::Once) {
+			qDebug() << "once";
 			Track *track = player->nextTrack();
 			if (track != nullptr) {
 				playTrack(track);
@@ -313,13 +333,11 @@ void MainWindow::update() {
 			} else {
 				player->stop();
 				updater->stop();
-				ui->seekbar->setValue(0);
-				return;
 			}
 		}
 	}
 
-	ui->seekbar->setValue(newValue);
+	onSeekbarValueChanged(newValue);
 }
 
 void MainWindow::playTrack(Track *track) {
@@ -360,4 +378,5 @@ void MainWindow::playTrack(Track *track) {
 	ui->sidebarFavButton->setVisible(true);
 	ui->sidebarFavButton->setTrackId((qint64)track->id());
 	ui->sidebarFavButton->setFavorite(track->isFavorite());
+	ui->totalTimeLabel->setDuration(track->duration());
 }

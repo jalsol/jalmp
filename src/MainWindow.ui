@@ -1002,6 +1002,32 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <string>✨just a little music player✨</string>
     </property>
    </widget>
+   <widget class="DurationLabel" name="currentTimeLabel">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>651</y>
+      <width>41</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>00:00</string>
+    </property>
+   </widget>
+   <widget class="DurationLabel" name="totalTimeLabel">
+    <property name="geometry">
+     <rect>
+      <x>895</x>
+      <y>651</y>
+      <width>41</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>00:00</string>
+    </property>
+   </widget>
    <zorder>background</zorder>
    <zorder>stackedWidget</zorder>
    <zorder>verticalLine</zorder>
@@ -1025,6 +1051,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <zorder>lyricsButton</zorder>
    <zorder>iconLabel</zorder>
    <zorder>label_4</zorder>
+   <zorder>currentTimeLabel</zorder>
+   <zorder>totalTimeLabel</zorder>
   </widget>
  </widget>
  <customwidgets>
@@ -1083,6 +1111,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <extends>QWidget</extends>
    <header>LyricsPage.hpp</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DurationLabel</class>
+   <extends>QLabel</extends>
+   <header>DurationLabel.hpp</header>
   </customwidget>
  </customwidgets>
  <resources/>
