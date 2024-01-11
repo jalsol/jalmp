@@ -123,9 +123,25 @@ Track* MediaQueue::next() {
 		return mQueue[System].first();
 	} else {
 		Track* track = mQueue[System].takeFirst();
+		mHistory.append(track);
 		emit queueChanged(System);
 		return track;
 	}
+}
+
+Track* MediaQueue::prev() {
+	if (mHistory.empty()) {
+		return nullptr;
+	}
+
+	mQueue[System].prepend(mHistory.takeLast());
+
+	if (mHistory.empty()) {
+		return nullptr;
+	}
+
+	addTrackAt((qint64)mHistory.last()->id(), 0);
+	return next();
 }
 
 Track* MediaQueue::skipUntil(QueueType queueType, TrackId trackId) {
@@ -135,7 +151,10 @@ Track* MediaQueue::skipUntil(QueueType queueType, TrackId trackId) {
 			return track;
 		}
 
-		mQueue[queueType].takeFirst();
+		track = mQueue[queueType].takeFirst();
+		if (queueType == System) {
+			mHistory.append(track);
+		}
 	}
 
 	emit queueChanged(queueType);
@@ -146,13 +165,21 @@ Track* MediaQueue::skipUntil(QueueType queueType, TrackId trackId) {
 Track* MediaQueue::skipPast(QueueType queueType, TrackId trackId) {
 	while (!mQueue[queueType].empty()) {
 		Track* track = mQueue[queueType].first();
+
 		if (track->id() == trackId) {
-			mQueue[queueType].takeFirst();
+			track = mQueue[queueType].takeFirst();
+			if (queueType == System) {
+				mHistory.append(track);
+			}
+
 			emit queueChanged(queueType);
 			return track;
 		}
 
-		mQueue[queueType].takeFirst();
+		track = mQueue[queueType].takeFirst();
+		if (queueType == System) {
+			mHistory.append(track);
+		}
 	}
 
 	emit queueChanged(queueType);

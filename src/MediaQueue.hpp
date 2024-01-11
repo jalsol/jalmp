@@ -33,6 +33,7 @@ public:
 	void unshuffleSystemQueue();
 
 	Track* next();
+	Track* prev();
 	Track* skipUntil(QueueType queueType, TrackId trackId);
 	Track* skipPast(QueueType queueType, TrackId trackId);
 
@@ -43,6 +44,7 @@ private:
 	MediaQueue();
 
 	QQueue<Track*> mQueue[2];
+	QList<Track*> mHistory;
 
 	QList<Track*> mLoopingPlaylist;
 	int mLastLoopingIdx;

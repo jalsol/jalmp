@@ -37,6 +37,10 @@ MainWindow::MainWindow(QWidget *parent)
 			&MainWindow::onShuffleButtonClicked);
 	connect(ui->stopButton, &QPushButton::clicked, this,
 			&MainWindow::onStopButtonClicked);
+	connect(ui->nextButton, &QPushButton::clicked, this,
+			&MainWindow::onNextButtonClicked);
+	connect(ui->prevButton, &QPushButton::clicked, this,
+			&MainWindow::onPrevButtonClicked);
 
 	connect(ui->homeButton, &QPushButton::clicked, this,
 			&MainWindow::onHomeButtonClicked);
@@ -178,6 +182,24 @@ void MainWindow::onMuteButtonClicked() {
 	} else {
 		ui->volume->setValue(player->volume());
 		ui->muteButton->setChecked(false);
+	}
+}
+
+void MainWindow::onNextButtonClicked() {
+	Track *track = player->nextTrack();
+	if (track != nullptr) {
+		playTrack(track);
+	} else {
+		ui->playButton->setChecked(false);
+	}
+}
+
+void MainWindow::onPrevButtonClicked() {
+	Track *track = player->prevTrack();
+	if (track != nullptr) {
+		playTrack(track);
+	} else {
+		ui->playButton->setChecked(false);
 	}
 }
 

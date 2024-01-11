@@ -2,6 +2,7 @@
 
 #include "MediaQueue.hpp"
 #include "ResourceManager.hpp"
+#include "SocketClient.hpp"
 
 MediaPlayer::MediaPlayer() {
 	setAudioOutput(audioOutput);
@@ -63,6 +64,17 @@ Track *MediaPlayer::invokeTrack(PlaylistId playlistId, TrackId trackId) {
 Track *MediaPlayer::nextTrack() {
 	MediaQueue &queue = MediaQueue::instance();
 	Track *track = queue.next();
+	if (track == nullptr) {
+		return nullptr;
+	}
+
+	loadTrack(track);
+	return track;
+}
+
+Track *MediaPlayer::prevTrack() {
+	MediaQueue &queue = MediaQueue::instance();
+	Track *track = queue.prev();
 	if (track == nullptr) {
 		return nullptr;
 	}

@@ -28,6 +28,8 @@ private slots:
 	void onShuffleButtonClicked();
 	void onStopButtonClicked();
 	void onMuteButtonClicked();
+	void onNextButtonClicked();
+	void onPrevButtonClicked();
 
 	void onHomeButtonClicked();
 	void onSearchButtonClicked();
