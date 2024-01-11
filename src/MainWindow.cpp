@@ -8,6 +8,7 @@
 
 #include <QDebug>
 #include <QPixmap>
+#include <QShortcut>
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -72,28 +73,52 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->viewTracklistOriginButton, &QPushButton::clicked, this,
 			&MainWindow::onViewOriginButtonClicked);
 
-	ui->homePage->fillFavorites();
-	ui->background->setStyleSheet(
-		"QLabel { background-image: url(../../assets/background.jpeg); }");
 	{
+		ui->homePage->fillFavorites();
+		ui->background->setStyleSheet(
+			"QLabel { background-image: url(../../assets/background.jpeg); }");
+
 		QPixmap cover("../../assets/placeholder.png");
 		ui->coverLabel->setPixmap(cover);
-	}
-	{
+
 		QPixmap goButton("../../assets/24D500.png");
 		ui->searchGoButton->setIcon(goButton);
 		ui->searchGoButton->setIconSize(QSize(30, 30));
-	}
-	ui->sidebarFavButton->setVisible(false);
 
-	ui->playButton->setOnTexture("4C7750");
-	ui->playButton->setOffTexture("4C9F00");
-	ui->muteButton->setOnTexture("4B8068");
-	ui->muteButton->setOffTexture("4B9660");
-	ui->repeatButton->setOnTexture("1D2E78");
-	ui->repeatButton->setOffTexture("1D3C68");
-	ui->shuffleButton->setOnTexture("1D1518");
-	ui->shuffleButton->setOffTexture("1D2230");
+		ui->sidebarFavButton->setVisible(false);
+	}
+
+	{
+		ui->playButton->setOnTexture("4C7750");
+		ui->playButton->setOffTexture("4C9F00");
+		ui->muteButton->setOnTexture("4B8068");
+		ui->muteButton->setOffTexture("4B9660");
+		ui->repeatButton->setOnTexture("1D2E78");
+		ui->repeatButton->setOffTexture("1D3C68");
+		ui->shuffleButton->setOnTexture("1D1518");
+		ui->shuffleButton->setOffTexture("1D2230");
+	}
+	{
+		auto *Space = new QShortcut(QKeySequence(Qt::Key_Space), this);
+		auto *N = new QShortcut(QKeySequence(Qt::Key_N), this);
+		auto *P = new QShortcut(QKeySequence(Qt::Key_P), this);
+		auto *M = new QShortcut(QKeySequence(Qt::Key_M), this);
+		auto *R = new QShortcut(QKeySequence(Qt::Key_R), this);
+		auto *CtrlR = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_R), this);
+
+		connect(Space, &QShortcut::activated, this,
+				&MainWindow::onPlayButtonClicked);
+		connect(N, &QShortcut::activated, this,
+				&MainWindow::onNextButtonClicked);
+		connect(P, &QShortcut::activated, this,
+				&MainWindow::onPrevButtonClicked);
+		connect(M, &QShortcut::activated, this,
+				&MainWindow::onMuteButtonClicked);
+		connect(R, &QShortcut::activated, this,
+				&MainWindow::onRepeatButtonClicked);
+		connect(CtrlR, &QShortcut::activated, this,
+				&MainWindow::onShuffleButtonClicked);
+	}
 }
 
 MainWindow::~MainWindow() {
