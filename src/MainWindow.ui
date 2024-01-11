@@ -31,8 +31,17 @@
   <property name="windowTitle">
    <string>jalmp - just a little music player</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../assets/53D058.png</normaloff>../assets/53D058.png</iconset>
+  </property>
   <property name="autoFillBackground">
    <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QScrollArea { background: transparent; }
+QScrollArea &gt; QWidget &gt; QWidget { background: rgba(224,223,222,120); }
+QScrollArea &gt; QWidget &gt; QScrollBar { background: palette(base); }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QStackedWidget" name="stackedWidget">
@@ -512,7 +521,7 @@
         </rect>
        </property>
        <property name="autoFillBackground">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <widget class="QTextEdit" name="lyricsText">
         <property name="geometry">
@@ -835,10 +844,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <widget class="QLabel" name="appLabel">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>-10</y>
+      <x>65</x>
+      <y>0</y>
       <width>121</width>
-      <height>111</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
@@ -846,6 +855,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <pointsize>30</pointsize>
       <italic>true</italic>
       <bold>true</bold>
+      <underline>false</underline>
       <kerning>true</kerning>
      </font>
     </property>
@@ -958,6 +968,40 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="iconLabel">
+    <property name="geometry">
+     <rect>
+      <x>75</x>
+      <y>100</y>
+      <width>101</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>18</x>
+      <y>60</y>
+      <width>221</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <italic>true</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+     </font>
+    </property>
+    <property name="text">
+     <string>✨just a little music player✨</string>
+    </property>
+   </widget>
    <zorder>background</zorder>
    <zorder>stackedWidget</zorder>
    <zorder>verticalLine</zorder>
@@ -979,6 +1023,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <zorder>stopButton</zorder>
    <zorder>sidebarFavButton</zorder>
    <zorder>lyricsButton</zorder>
+   <zorder>iconLabel</zorder>
+   <zorder>label_4</zorder>
   </widget>
  </widget>
  <customwidgets>

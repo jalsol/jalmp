@@ -80,14 +80,15 @@ MainWindow::MainWindow(QWidget *parent)
 		ui->background->setStyleSheet(
 			"QLabel { background-image: url(../../assets/background.jpeg); }");
 
-		QPixmap cover("../../assets/placeholder.png");
-		ui->coverLabel->setPixmap(cover);
+		ui->coverLabel->setPixmap(QPixmap("../../assets/placeholder.png"));
 
-		QPixmap goButton("../../assets/24D500.png");
-		ui->searchGoButton->setIcon(goButton);
+		ui->searchGoButton->setIcon(QPixmap("../../assets/24D500.png"));
 		ui->searchGoButton->setIconSize(QSize(30, 30));
 
 		ui->sidebarFavButton->setVisible(false);
+
+		ui->iconLabel->setPixmap(QPixmap("../../assets/53D058.png"));
+		ui->iconLabel->setScaledContents(true);
 	}
 
 	{
