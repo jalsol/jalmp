@@ -1,0 +1,290 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+class AddrInfo {
+	+AddrInfo()
+	+AddrInfo(const AddrInfo &)
+	+AddrInfo(const addrinfo &)
+	+family() : AIFamily {query}
+	+flag() : AIFlag {query}
+	+protocol() : AIProtocol {query}
+	+sockType() : AISockType {query}
+	+setFamily(AIFamily family) : AddrInfo&
+	+setFlag(AIFlag flag) : AddrInfo&
+	+setSocket(AISockType sock_type) : AddrInfo&
+	+data() : addrinfo& {query}
+	+address() : sockaddr* {query}
+	+addressLen() : socklen_t {query}
+	+addressLen() : socklen_t&
+}
+
+
+class EpollEvent {
+	+EpollEvent()
+	+EpollEvent(const EpollEvent &)
+	+EpollEvent(EpollEvent& &)
+	+EpollEvent(FileDesc fd, uint32_t events)
+	+operator=(const EpollEvent &) : EpollEvent&
+	+operator=(EpollEvent& &) : EpollEvent&
+	+events() : EpollEventMask {query}
+	+fd() : FileDesc {query}
+	+contains(EpollEventFlag flag) : bool {query}
+	+data() : epoll_event&
+	+data() : epoll_event& {query}
+}
+
+
+class EpollInstance {
+	+EpollInstance()
+	+EpollInstance(EpollInstance&& other)
+	+~EpollInstance()
+	+operator=(EpollInstance&& other) : EpollInstance&
+	+fd() : FileDesc {query}
+	+eventCount() : int {query}
+	-{static} max_events : static constexpr int
+	+events() : std::span<EpollEvent>
+	+fds() : std::span<FileDesc>
+	+add(FileDesc fd, EpollEventMask events) : void
+	+modify(FileDesc fd, EpollEventMask events) : void
+	+remove(FileDesc fd) : void
+	+wait(int timeout) : void
+}
+
+
+class MediaPlayer {
+	-MediaPlayer()
+	-~MediaPlayer()
+	+{static} instance() : MediaPlayer*
+	-mPlaylistId : PlaylistId
+	+playlistId() : PlaylistId {query}
+	-audioOutput : QAudioOutput*
+	+invokeTrack(PlaylistId playlistId, TrackId trackId) : Track*
+	+nextTrack() : Track*
+	-mTrackId : TrackId
+	+isMuted() : bool {query}
+	-mMute : bool
+	-mCachedVolume : int
+	-mVolume : int
+	+volume() : int {query}
+	+cacheVolume() : void
+	+{static} init(QObject* parent) : void
+	-loadTrack(Track* track) : void
+	+setVolume(int volume) : void
+	+toggleMuteVolume() : void
+}
+
+
+class MediaQueue {
+	-MediaQueue()
+	+{static} instance() : MediaQueue&
+	-mPlaylistId : PlaylistId
+	+playlistId() : PlaylistId {query}
+	-mLoopingPlaylist : QList<Track*>
+	+removeFromQueue(QueueType queueType, TrackId trackId) : QPair<Track* , int>
+	-mQueue : QQueue<Track*>
+	+queue(QueueType queueType) : QQueue<Track*> {query}
+	+next() : Track*
+	+skipPast(QueueType queueType, TrackId trackId) : Track*
+	+skipUntil(QueueType queueType, TrackId trackId) : Track*
+	-mOnRepeat : bool
+	-mLastLoopingIdx : int
+	+queueChanged(QueueType queueType) : signals : void
+	+addTrack(TrackId trackId) : void
+	+addTrackAt(TrackId trackId, int index) : void
+	+moveDown(QueueType queueType, TrackId trackId) : void
+	+moveUp(QueueType queueType, TrackId trackId) : void
+	+refillSystemQueue() : void
+	+setPlaylist(PlaylistId playlistId) : void
+	+setPlaylist(PlaylistId playlistId, const QList<Track*>& playlist) : void
+	+shuffleSystemQueue() : void
+	+unshuffleSystemQueue() : void
+}
+
+
+class Navigator {
+	-Navigator()
+	+{static} instance() : Navigator*
+	+navigatedToArtist(ArtistId artistId) : signals : void
+	+navigateTo(QString path) : void
+	+navigatedToHome() : void
+	+navigatedToPlaylist(PlaylistId playlistId) : void
+	+navigatedToSearch() : void
+	+navigatedToTrack(PlaylistId playlistId, TrackId trackId) : void
+	+queueAdded(TrackId trackId) : void
+	+queueDeleted(QueueType queueType, TrackId trackId) : void
+	+queueDown(QueueType queueType, TrackId trackId) : void
+	+queueUp(QueueType queueType, TrackId trackId) : void
+	+toggledFavorite(TrackId trackId, bool favorite) : void
+}
+
+
+class ResourceManager {
+	-ResourceManager()
+	-~ResourceManager()
+	+getArtist(ArtistId id) : Artist*
+	+getArtistByPlaylist(PlaylistId playlistId) : Artist*
+	+getPlaylist(PlaylistId id) : Playlist*
+	+getAllArtists() : QList<Artist*>
+	+getArtistsByTrack(TrackId trackId) : QList<Artist*>
+	+getEntitiesByKeyword(const QString& keyword) : QList<Entity*>
+	+getAllPlaylists() : QList<Playlist*>
+	+getPlaylistsByArtist(ArtistId artistId) : QList<Playlist*>
+	+getAllFavoriteTracks() : QList<Track*>
+	+getTracksByArtist(ArtistId artistId) : QList<Track*>
+	+getTracksByPlaylist(PlaylistId playlistId) : QList<Track*>
+	-mDatabase : QSqlDatabase
+	+{static} instance() : ResourceManager&
+	+getTrack(TrackId id) : Track*
+	+trackFavoriteChanged(TrackId trackId, bool favorite) : signals : void
+	-mArtists : std::list<Artist>
+	-mPlaylists : std::list<Playlist>
+	-mTracks : std::list<Track>
+	+setTrackFavorite(TrackId trackId, bool favourite) : void
+}
+
+
+class SockAddr {
+	+family() : AIFamily {query}
+	+data() : sockaddr_storage&
+	+data() : sockaddr_storage& {query}
+}
+
+
+class Socket {
+	+Socket()
+	+Socket(AIFamily domain, AISockType sock_type, AIProtocol protocol)
+	+Socket(Socket&& other)
+	+~Socket()
+	-m_type : AISockType
+	+type() : AISockType {query}
+	+fd() : FileDesc {query}
+	+operator=(Socket&& other) : Socket&
+	+error() : bool {query}
+	+setOpt(int level, SockOpt optname) : bool
+	+accept() : std::pair<FileDesc , SockAddr>
+}
+
+
+class SocketClient {
+	-SocketClient(std::string_view host, std::string_view port)
+	+{static} instance() : SocketClient&
+	-mConnected : bool
+	-readStreamSize() : std::optional<QPair<qint64 , std::string>>
+	+sendRequest(RequestType requestType, const QString& request) : std::optional<QString>
+	-readData() : std::optional<std::string>
+	-mHost : std::string_view
+	-mPort : std::string_view
+	-init() : void
+	-retryConnection() : void
+}
+
+
+enum AIFamily {
+	IPv4
+	IPv6
+	Unix
+	Unspec
+}
+
+
+enum AIFlag {
+	CanonName
+	None
+	Passive
+}
+
+
+enum AIProtocol {
+	Any
+	SCTP
+	TCP
+	UDP
+	Unspec
+}
+
+
+enum AISockType {
+	Datagram
+	RDM
+	Raw
+	SeqPacket
+	Stream
+}
+
+
+enum EpollCtlOp {
+	Add
+	Modify
+	Remove
+}
+
+
+enum EpollEventFlag {
+	EdgeTriggered
+	Error
+	Exclusive
+	HangUp
+	In
+	None
+	OneShot
+	Out
+	Priority
+	ReadHangUp
+	WakeUp
+}
+
+
+enum ErrAI {
+	AddrFamily
+	Again
+	BadFlags
+	Fail
+	Family
+	Memory
+	NoData
+	NoName
+	Service
+	SockType
+	Success
+	System
+}
+
+
+enum RequestType {
+	Audio
+	Lyrics
+}
+
+
+enum SockOpt {
+	ReuseAddr
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+
+
+
+/' Aggregation relationships '/
+
+.Socket *-- .AISockType
+
+
+
+
+
+
+/' Nested objects '/
+
+
+
+@enduml

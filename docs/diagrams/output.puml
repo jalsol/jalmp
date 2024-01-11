@@ -1,0 +1,693 @@
+@startuml
+
+scale 3840 width
+scale 2160 height
+
+
+
+/' Objects '/
+
+class AddQueueButton {
+	+AddQueueButton(QWidget* parent)
+	+AddQueueButton(TrackId trackId, QWidget* parent)
+	-mPath : QString
+	-mTrackId : TrackId
+	+addToQueue() : void
+	-setInternalState() : void
+}
+
+
+class Artist {
+	+type() : EntityType {query}
+}
+
+
+class ArtistBuilder {
+	+build() : Artist {query}
+	-mArtist : Artist
+	+setCover(const QString& cover) : ArtistBuilder&
+	+setId(ArtistId id) : ArtistBuilder&
+	+setName(const QString& name) : ArtistBuilder&
+}
+
+
+class ArtistId {
+}
+
+
+class ArtistsListCapture {
+	+ArtistsListCapture(QWidget* parent)
+	+ArtistsListCapture(const QString& capture, QWidget* parent)
+	-mFilled : bool
+	-fill() : void
+	+loadArtists() : void
+}
+
+
+class ArtistsPage {
+	+ArtistsPage(QWidget* parent)
+	-mList : ArtistsListCapture
+	-mFilled : bool
+	+fill() : void
+}
+
+
+class DeleteQueueButton {
+	+DeleteQueueButton(QWidget* parent)
+	+DeleteQueueButton(int queueType, TrackId trackId, QWidget* parent)
+	-mPath : QString
+	-mTrackId : TrackId
+	-mQueueType : int
+	+deleteFromQueue() : void
+	-setInternalState() : void
+}
+
+
+class DownQueueButton {
+	+DownQueueButton(QWidget* parent)
+	+DownQueueButton(int queueType, TrackId trackId, QWidget* parent)
+	-mPath : QString
+	-mTrackId : TrackId
+	-mQueueType : int
+	+downFromQueue() : void
+	-setInternalState() : void
+}
+
+
+class DurationLabel {
+	+DurationLabel(QTime duration)
+}
+
+
+class Entity {
+	+id() : EntityId {query}
+	#mId : EntityId
+	+type() : EntityType {query}
+	+cover() : QString {query}
+	#mCover : QString
+	#mName : QString
+	+name() : QString {query}
+	+{static} typeToString(EntityType type) : QString
+	+isFavorite() : bool {query}
+	#setCover(const QString& cover) : void
+	#setId(EntityId id) : void
+	#setName(const QString& name) : void
+}
+
+
+class EntityButton {
+	+EntityButton(QWidget* parent)
+	+EntityButton(Entity* entity, PlaylistId playlistId, QWidget* parent)
+	#mPlaylistId : PlaylistId
+	#mPath : QString
+	+onClicked() : void
+}
+
+
+class EntityGridButton {
+	+EntityGridButton(QWidget* parent)
+	+EntityGridButton(Entity* entity, PlaylistId playlistId, QWidget* parent)
+}
+
+
+class EntityId {
+	+EntityId()
+	+EntityId(const int64_t value)
+	+operatorint64_t() {query}
+	+operator!=(int64_t value) : bool {query}
+	+operator==(int64_t value) : bool {query}
+	#mValue : int64_t
+	+{static} Invalid : static constexpr int64_t
+}
+
+
+class EntityListButton {
+	+EntityListButton(QWidget* parent)
+	+EntityListButton(Entity* entity, PlaylistId playlistId, QWidget* parent)
+}
+
+
+class FavoriteButton {
+	+FavoriteButton(QWidget* parent)
+	+FavoriteButton(TrackId trackId, bool favorite, QWidget* parent)
+	-mPath : QString
+	-mTrackId : TrackId
+	-mFavorite : bool
+	+setFavorite(bool favorite) : void
+	-setInternalState() : void
+	+setTrackId(TrackId trackId) : void
+	+toggleFavorite() : void
+}
+
+
+class FavoriteListCapture {
+	+FavoriteListCapture(QWidget* parent)
+	+FavoriteListCapture(const QString& capture, QWidget* parent)
+	-mFavorites : QList<Track*>
+	-fill() : void
+	+loadFavorites() : void
+}
+
+
+class HomePage {
+	+HomePage(QWidget* parent)
+	-mFavoriteList : FavoriteListCapture
+	+fillFavorites() : void
+	+fillQueue(QueueType queueType) : void
+	+fillQueues() : void
+	+onTrackFavoriteChanged(TrackId trackId, bool favorite) : void
+}
+
+
+class IndexLabel {
+	+IndexLabel(int index)
+}
+
+
+class MainWindow {
+	+MainWindow(QWidget* parent)
+	+~MainWindow()
+	-player : MediaPlayer*
+	-navigator : Navigator*
+	-coverArt : QPixmap
+	-updater : QTimer*
+	-ui : Ui::MainWindow*
+	-onArtistsButtonClicked() : void
+	-onHomeButtonClicked() : void
+	-onMuteButtonClicked() : void
+	-onNavigatedToArtist(ArtistId artistId) : void
+	-onNavigatedToHome() : void
+	-onNavigatedToPlaylist(PlaylistId playlistId) : void
+	-onNavigatedToSearch() : void
+	-onNavigatedToTrack(PlaylistId playlistId, TrackId trackId) : void
+	-onPlayButtonClicked() : void
+	-onPlaylistsButtonClicked() : void
+	-onRepeatButtonClicked() : void
+	-onSearchButtonClicked() : void
+	-onSeekbarReleased() : void
+	-onShuffleButtonClicked() : void
+	-onStopButtonClicked() : void
+	-onViewOriginButtonClicked() : void
+	-onVolumeValueChanged(int value) : void
+	-playTrack(Track* track) : void
+	-update() : void
+}
+
+
+class MediaPlayer {
+	-MediaPlayer()
+	-~MediaPlayer()
+	+{static} instance() : MediaPlayer*
+	-mPlaylistId : PlaylistId
+	+playlistId() : PlaylistId {query}
+	-audioOutput : QAudioOutput*
+	+invokeTrack(PlaylistId playlistId, TrackId trackId) : Track*
+	+nextTrack() : Track*
+	-mTrackId : TrackId
+	+isMuted() : bool {query}
+	-mMute : bool
+	-mCachedVolume : int
+	-mVolume : int
+	+volume() : int {query}
+	+cacheVolume() : void
+	+{static} init(QObject* parent) : void
+	-loadTrack(Track* track) : void
+	+setVolume(int volume) : void
+	+toggleMuteVolume() : void
+}
+
+
+class MediaQueue {
+	-MediaQueue()
+	+{static} instance() : MediaQueue&
+	-mPlaylistId : PlaylistId
+	+playlistId() : PlaylistId {query}
+	-mLoopingPlaylist : QList<Track*>
+	+removeFromQueue(QueueType queueType, TrackId trackId) : QPair<Track* , int>
+	-mQueue : QQueue<Track*>
+	+queue(QueueType queueType) : QQueue<Track*> {query}
+	+next() : Track*
+	+skipPast(QueueType queueType, TrackId trackId) : Track*
+	+skipUntil(QueueType queueType, TrackId trackId) : Track*
+	-mOnRepeat : bool
+	-mLastLoopingIdx : int
+	+queueChanged(QueueType queueType) : signals : void
+	+addTrack(TrackId trackId) : void
+	+addTrackAt(TrackId trackId, int index) : void
+	+moveDown(QueueType queueType, TrackId trackId) : void
+	+moveUp(QueueType queueType, TrackId trackId) : void
+	+refillSystemQueue() : void
+	+setPlaylist(PlaylistId playlistId) : void
+	+setPlaylist(PlaylistId playlistId, const QList<Track*>& playlist) : void
+	+shuffleSystemQueue() : void
+	+unshuffleSystemQueue() : void
+}
+
+
+class MediaSlider {
+	+MediaSlider(Qt::Orientation, QWidget* parent)
+	+MediaSlider(QWidget* parent)
+	#mousePressEvent(QMouseEvent* event) : void
+}
+
+
+class Navigator {
+	-Navigator()
+	+{static} instance() : Navigator*
+	+navigatedToArtist(ArtistId artistId) : signals : void
+	+navigateTo(QString path) : void
+	+navigatedToHome() : void
+	+navigatedToPlaylist(PlaylistId playlistId) : void
+	+navigatedToSearch() : void
+	+navigatedToTrack(PlaylistId playlistId, TrackId trackId) : void
+	+queueAdded(TrackId trackId) : void
+	+queueDeleted(QueueType queueType, TrackId trackId) : void
+	+queueDown(QueueType queueType, TrackId trackId) : void
+	+queueUp(QueueType queueType, TrackId trackId) : void
+	+toggledFavorite(TrackId trackId, bool favorite) : void
+}
+
+
+class Page {
+	+Page(QWidget* parent)
+}
+
+
+class Playlist {
+	+type() : EntityType {query}
+}
+
+
+class PlaylistBuilder {
+	+PlaylistBuilder()
+	+build() : Playlist {query}
+	-mPlaylist : Playlist
+	+setCover(const QString& cover) : PlaylistBuilder&
+	+setId(PlaylistId id) : PlaylistBuilder&
+	+setName(const QString& name) : PlaylistBuilder&
+}
+
+
+class PlaylistId {
+	+{static} Favorites : static constexpr int64_t
+	+{static} Search : static constexpr int64_t
+	+{static} Tracklist : static constexpr int64_t
+	+{static} UserQueue : static constexpr int64_t
+}
+
+
+class PlaylistsListCapture {
+	+PlaylistsListCapture(QWidget* parent)
+	+PlaylistsListCapture(const QString& capture, QWidget* parent)
+	-mArtistId : ArtistId
+	-fill() : void
+	+loadArtistPlaylists(ArtistId artistId) : void
+}
+
+
+class PlaylistsPage {
+	+PlaylistsPage(QWidget* parent)
+	-mList : PlaylistsListCapture
+	+fill(ArtistId artistId) : void
+}
+
+
+class QueueListCapture {
+	+QueueListCapture(QWidget* parent)
+	+QueueListCapture(int queueType, const QString& capture, QWidget* parent)
+	-mQueue : QQueue<Track*>
+	-mQueueType : int
+	-fill() : void
+	+loadQueue(const QQueue<Track*>& queue) : void
+}
+
+
+class ResourceManager {
+	-ResourceManager()
+	-~ResourceManager()
+	+getArtist(ArtistId id) : Artist*
+	+getArtistByPlaylist(PlaylistId playlistId) : Artist*
+	+getPlaylist(PlaylistId id) : Playlist*
+	+getAllArtists() : QList<Artist*>
+	+getArtistsByTrack(TrackId trackId) : QList<Artist*>
+	+getEntitiesByKeyword(const QString& keyword) : QList<Entity*>
+	+getAllPlaylists() : QList<Playlist*>
+	+getPlaylistsByArtist(ArtistId artistId) : QList<Playlist*>
+	+getAllFavoriteTracks() : QList<Track*>
+	+getTracksByArtist(ArtistId artistId) : QList<Track*>
+	+getTracksByPlaylist(PlaylistId playlistId) : QList<Track*>
+	-mDatabase : QSqlDatabase
+	+{static} instance() : ResourceManager&
+	+getTrack(TrackId id) : Track*
+	+trackFavoriteChanged(TrackId trackId, bool favorite) : signals : void
+	-mArtists : std::list<Artist>
+	-mPlaylists : std::list<Playlist>
+	-mTracks : std::list<Track>
+	+setTrackFavorite(TrackId trackId, bool favourite) : void
+}
+
+
+abstract class ScrollListCapture {
+	+ScrollListCapture(QWidget* parent)
+	+ScrollListCapture(const QString& capture, QWidget* parent)
+	+clear() : void
+	+{abstract} fill() : void
+	+reload() : void
+}
+
+
+class SearchListCapture {
+	+SearchListCapture(QWidget* parent)
+	+SearchListCapture(const QString& capture, QWidget* parent)
+	-mKeyword : QString
+	-fill() : void
+	+loadResultFrom(const QString& keyword) : void
+}
+
+
+class SearchPage {
+	+SearchPage(QWidget* parent)
+	-mList : SearchListCapture
+	-mSearchInput : WidgetCapture<QLineEdit>
+	+fill() : void
+	+onSearchButtonClicked() : void
+}
+
+
+class SidebarTitle {
+	+SidebarTitle(QWidget* parent)
+	+setTitle(TrackId trackId) : void
+}
+
+
+class SocketClient {
+	-SocketClient(std::string_view host, std::string_view port)
+	+{static} instance() : SocketClient&
+	-mConnected : bool
+	-readStreamSize() : std::optional<QPair<qint64 , std::string>>
+	+sendRequest(RequestType requestType, const QString& request) : std::optional<QString>
+	-readData() : std::optional<std::string>
+	-mHost : std::string_view
+	-mPort : std::string_view
+	-init() : void
+	-retryConnection() : void
+}
+
+
+class ToggleButton {
+	+ToggleButton(QWidget* parent)
+	-mTextureOff : QString
+	-mTextureOn : QString
+	+setChecked(bool checked) : void
+	+setOffTexture(const QString& textureOff) : void
+	+setOnTexture(const QString& textureOn) : void
+}
+
+
+class Track {
+	+type() : EntityType {query}
+	-mUrl : QString
+	+url() : QString {query}
+	+duration() : QTime {query}
+	+isFavorite() : bool {query}
+	-mIsFavorite : bool
+	-setDuration(const QTime& duration) : void
+	-setFavorite(bool isFavorite) : void
+	-setUrl(const QString& url) : void
+}
+
+
+class TrackBuilder {
+	+build() : Track {query}
+	-mTrack : Track
+	+setCover(const QString& cover) : TrackBuilder&
+	+setDuration(const QTime& duration) : TrackBuilder&
+	+setFavorite(bool isFavorite) : TrackBuilder&
+	+setId(TrackId id) : TrackBuilder&
+	+setName(const QString& Name) : TrackBuilder&
+	+setUrl(const QString& url) : TrackBuilder&
+}
+
+
+class TrackId {
+}
+
+
+class TrackListCapture {
+	+TrackListCapture(QWidget* parent)
+	+TrackListCapture(const QString& capture, QWidget* parent)
+	-mId : EntityId
+	-mType : EntityType
+	-mTracks : QList<Track*>
+	+id() : QPair<EntityId , EntityType> {query}
+	-fill() : void
+	+loadTrackFrom(EntityId id, EntityType type) : void
+	+loadTracksToQueue() : void
+}
+
+
+class TrackListPage {
+	+TrackListPage(QWidget* parent)
+	+id() : QPair<EntityId , EntityType> {query}
+	-mPixmap : QPixmap
+	-mList : TrackListCapture
+	-mCover : WidgetCapture<QLabel>
+	-mName : WidgetCapture<QLabel>
+	-mOrigin : WidgetCapture<QPushButton>
+	+fill(EntityId id, EntityType type) : void
+	+onNavigatedToTrack(PlaylistId playlistId, TrackId trackId) : void
+	+reload() : void
+}
+
+
+class UpQueueButton {
+	+UpQueueButton(QWidget* parent)
+	+UpQueueButton(int queueType, TrackId trackId, QWidget* parent)
+	-mPath : QString
+	-mTrackId : TrackId
+	-mQueueType : int
+	-setInternalState() : void
+	+upFromQueue() : void
+}
+
+
+class WidgetCapture <template<class WidgetClass>> {
+	+WidgetCapture(QWidget* parent)
+	+WidgetCapture(const QString& capture, QWidget* parent)
+	#mCapture : QString
+	+get() : WidgetClass*
+	#mWidget : WidgetClass*
+}
+
+
+enum EntityType {
+	Artist
+	Default
+	Playlist
+	Track
+}
+
+
+enum MainWindow::PageId {
+	Artists
+	Home
+	Playlists
+	Search
+	Tracklist
+}
+
+
+enum QueueType {
+	Invalid
+	System
+	User
+}
+
+
+enum RequestType {
+	Audio
+	Lyrics
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+.Entity <|-- .Artist
+
+
+.Entity <|-- .Playlist
+
+
+.Entity <|-- .Track
+
+
+.EntityButton <|-- .EntityGridButton
+
+
+.EntityButton <|-- .EntityListButton
+
+
+.EntityId <|-- .ArtistId
+
+
+.EntityId <|-- .PlaylistId
+
+
+.EntityId <|-- .TrackId
+
+
+.Page <|-- .ArtistsPage
+
+
+.Page <|-- .HomePage
+
+
+.Page <|-- .PlaylistsPage
+
+
+.Page <|-- .SearchPage
+
+
+.Page <|-- .TrackListPage
+
+
+.ScrollListCapture <|-- .ArtistsListCapture
+
+
+.ScrollListCapture <|-- .FavoriteListCapture
+
+
+.ScrollListCapture <|-- .PlaylistsListCapture
+
+
+.ScrollListCapture <|-- .QueueListCapture
+
+
+.ScrollListCapture <|-- .SearchListCapture
+
+
+.ScrollListCapture <|-- .TrackListCapture
+
+
+.WidgetCapture <|-- .ScrollListCapture
+
+
+
+
+
+/' Aggregation relationships '/
+
+.AddQueueButton *-- .TrackId
+
+
+.ArtistBuilder *-- .Artist
+
+
+.ArtistsPage *-- .ArtistsListCapture
+
+
+.DeleteQueueButton *-- .TrackId
+
+
+.DownQueueButton *-- .TrackId
+
+
+.Entity *-- .EntityId
+
+
+.EntityButton *-- .PlaylistId
+
+
+.FavoriteButton *-- .TrackId
+
+
+.FavoriteListCapture o-- .Track
+
+
+.HomePage *-- .FavoriteListCapture
+
+
+.MainWindow o-- .MainWindow
+
+
+.MainWindow o-- .MediaPlayer
+
+
+.MainWindow o-- .Navigator
+
+
+.MediaPlayer *-- .PlaylistId
+
+
+.MediaPlayer *-- .TrackId
+
+
+.MediaQueue *-- .PlaylistId
+
+
+.MediaQueue "2" o-- .Track
+
+
+.PlaylistBuilder *-- .Playlist
+
+
+.PlaylistsListCapture *-- .ArtistId
+
+
+.PlaylistsPage *-- .PlaylistsListCapture
+
+
+.QueueListCapture o-- .Track
+
+
+.ResourceManager *-- .Artist
+
+
+.ResourceManager *-- .Playlist
+
+
+.ResourceManager *-- .Track
+
+
+.SearchPage *-- .SearchListCapture
+
+
+.SearchPage *-- .WidgetCapture
+
+
+.TrackBuilder *-- .Track
+
+
+.TrackListCapture *-- .EntityId
+
+
+.TrackListCapture *-- .EntityType
+
+
+.TrackListCapture o-- .Track
+
+
+.TrackListPage *-- .TrackListCapture
+
+
+.TrackListPage "3" *-- .WidgetCapture
+
+
+.UpQueueButton *-- .TrackId
+
+
+
+
+
+
+/' Nested objects '/
+
+.MainWindow +-- .MainWindow::PageId
+
+
+
+
+@enduml

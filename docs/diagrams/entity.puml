@@ -1,0 +1,169 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+class Artist {
+	+type() : EntityType {query}
+}
+
+
+class ArtistBuilder {
+	+build() : Artist {query}
+	-mArtist : Artist
+	+setCover(const QString& cover) : ArtistBuilder&
+	+setId(ArtistId id) : ArtistBuilder&
+	+setName(const QString& name) : ArtistBuilder&
+}
+
+
+class ArtistId {
+}
+
+
+class Entity {
+	+id() : EntityId {query}
+	#mId : EntityId
+	+type() : EntityType {query}
+	+cover() : QString {query}
+	#mCover : QString
+	#mName : QString
+	+name() : QString {query}
+	+{static} typeToString(EntityType type) : QString
+	+isFavorite() : bool {query}
+	#setCover(const QString& cover) : void
+	#setId(EntityId id) : void
+	#setName(const QString& name) : void
+}
+
+
+class EntityId {
+	+EntityId()
+	+EntityId(const int64_t value)
+	+operatorint64_t() {query}
+	+operator!=(int64_t value) : bool {query}
+	+operator==(int64_t value) : bool {query}
+	#mValue : int64_t
+	+{static} Invalid : static constexpr int64_t
+}
+
+
+class Playlist {
+	+type() : EntityType {query}
+}
+
+
+class PlaylistBuilder {
+	+PlaylistBuilder()
+	+build() : Playlist {query}
+	-mPlaylist : Playlist
+	+setCover(const QString& cover) : PlaylistBuilder&
+	+setId(PlaylistId id) : PlaylistBuilder&
+	+setName(const QString& name) : PlaylistBuilder&
+}
+
+
+class PlaylistId {
+	+{static} Favorites : static constexpr int64_t
+	+{static} Search : static constexpr int64_t
+	+{static} Tracklist : static constexpr int64_t
+	+{static} UserQueue : static constexpr int64_t
+}
+
+
+class Track {
+	+type() : EntityType {query}
+	-mUrl : QString
+	+url() : QString {query}
+	+duration() : QTime {query}
+	+isFavorite() : bool {query}
+	-mIsFavorite : bool
+	-setDuration(const QTime& duration) : void
+	-setFavorite(bool isFavorite) : void
+	-setUrl(const QString& url) : void
+}
+
+
+class TrackBuilder {
+	+build() : Track {query}
+	-mTrack : Track
+	+setCover(const QString& cover) : TrackBuilder&
+	+setDuration(const QTime& duration) : TrackBuilder&
+	+setFavorite(bool isFavorite) : TrackBuilder&
+	+setId(TrackId id) : TrackBuilder&
+	+setName(const QString& Name) : TrackBuilder&
+	+setUrl(const QString& url) : TrackBuilder&
+}
+
+
+class TrackId {
+}
+
+
+enum EntityType {
+	Artist
+	Default
+	Playlist
+	Track
+}
+
+
+enum QueueType {
+	Invalid
+	System
+	User
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+.Entity <|-- .Artist
+
+
+.Entity <|-- .Playlist
+
+
+.Entity <|-- .Track
+
+
+.EntityId <|-- .ArtistId
+
+
+.EntityId <|-- .PlaylistId
+
+
+.EntityId <|-- .TrackId
+
+
+
+
+
+/' Aggregation relationships '/
+
+.ArtistBuilder *-- .Artist
+
+
+.Entity *-- .EntityId
+
+
+.PlaylistBuilder *-- .Playlist
+
+
+.TrackBuilder *-- .Track
+
+
+
+
+
+
+/' Nested objects '/
+
+
+
+@enduml
