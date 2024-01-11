@@ -131,7 +131,6 @@ std::optional<QString> SocketClient::sendRequest(RequestType requestType,
 }
 
 std::optional<std::string> SocketClient::readData() {
-	qDebug() << "Reading data";
 	const auto& recv_opt = jalsock::recv(mServerSock.fd(), 0);
 
 	if (!recv_opt) {

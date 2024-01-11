@@ -35,6 +35,7 @@ private slots:
 	void onSearchButtonClicked();
 	void onPlaylistsButtonClicked();
 	void onArtistsButtonClicked();
+	void onLyricsButtonClicked();
 	void onViewOriginButtonClicked();
 
 	void onNavigatedToArtist(ArtistId artistId);
@@ -53,6 +54,7 @@ private:
 		Playlists,
 		Artists,
 		Tracklist,
+		Lyrics,
 	};
 
 	Ui::MainWindow *ui;

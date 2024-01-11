@@ -9,6 +9,7 @@
 #include <QMediaPlayer>
 
 class MediaPlayer : public QMediaPlayer {
+	Q_OBJECT
 public:
 	MediaPlayer(const MediaPlayer&) = delete;
 	MediaPlayer& operator=(const MediaPlayer&) = delete;
@@ -28,6 +29,9 @@ public:
 	void toggleMuteVolume();
 	void cacheVolume();
 	void setVolume(int volume);
+
+signals:
+	void trackLoaded(TrackId trackId);
 
 private:
 	MediaPlayer();

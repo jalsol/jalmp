@@ -93,6 +93,8 @@ void MediaPlayer::loadTrack(Track *track) {
 	} else {
 		qDebug() << "MediaPlayer::loadTrack: source is empty";
 	}
+
+	emit trackLoaded((qint64)track->id());
 }
 
 PlaylistId MediaPlayer::playlistId() const { return mPlaylistId; }

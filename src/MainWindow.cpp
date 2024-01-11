@@ -53,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
 			&MainWindow::onArtistsButtonClicked);
 	connect(ui->sidebarTitle, &SidebarTitle::linkActivated, navigator,
 			&Navigator::navigateTo);
+	connect(ui->lyricsButton, &QPushButton::clicked, this,
+			&MainWindow::onLyricsButtonClicked);
 
 	connect(ui->searchGoButton, &QPushButton::clicked, ui->searchPage,
 			&SearchPage::onSearchButtonClicked);
@@ -124,6 +126,9 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow() {
 	delete updater;
 	delete ui;
+
+	QFile::remove("../../audio.mp3");
+	QFile::remove("../../lyrics.txt");
 }
 
 void MainWindow::onPlayButtonClicked() {
@@ -244,6 +249,10 @@ void MainWindow::onPlaylistsButtonClicked() {
 void MainWindow::onArtistsButtonClicked() {
 	ui->artistsPage->fill();
 	ui->stackedWidget->setCurrentIndex(Artists);
+}
+
+void MainWindow::onLyricsButtonClicked() {
+	ui->stackedWidget->setCurrentIndex(Lyrics);
 }
 
 void MainWindow::onViewOriginButtonClicked() {
