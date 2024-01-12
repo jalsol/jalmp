@@ -122,8 +122,8 @@ MainWindow::MainWindow(QWidget *parent)
 				&MainWindow::onMuteButtonClicked);
 		connect(R, &QShortcut::activated, this,
 				&MainWindow::onRepeatButtonClicked);
-		connect(CtrlR, &QShortcut::activated, this,
-				&MainWindow::onShuffleButtonClicked);
+		connect(CtrlR, &QShortcut::activated, ui->shuffleButton,
+				&QPushButton::click);
 	}
 }
 
