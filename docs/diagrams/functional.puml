@@ -65,12 +65,14 @@ class MediaPlayer {
 	-audioOutput : QAudioOutput*
 	+invokeTrack(PlaylistId playlistId, TrackId trackId) : Track*
 	+nextTrack() : Track*
+	+prevTrack() : Track*
 	-mTrackId : TrackId
 	+isMuted() : bool {query}
 	-mMute : bool
 	-mCachedVolume : int
 	-mVolume : int
 	+volume() : int {query}
+	+trackLoaded(TrackId trackId) : signals : void
 	+cacheVolume() : void
 	+{static} init(QObject* parent) : void
 	-loadTrack(Track* track) : void
@@ -84,11 +86,13 @@ class MediaQueue {
 	+{static} instance() : MediaQueue&
 	-mPlaylistId : PlaylistId
 	+playlistId() : PlaylistId {query}
+	-mHistory : QList<Track*>
 	-mLoopingPlaylist : QList<Track*>
 	+removeFromQueue(QueueType queueType, TrackId trackId) : QPair<Track* , int>
 	-mQueue : QQueue<Track*>
 	+queue(QueueType queueType) : QQueue<Track*> {query}
 	+next() : Track*
+	+prev() : Track*
 	+skipPast(QueueType queueType, TrackId trackId) : Track*
 	+skipUntil(QueueType queueType, TrackId trackId) : Track*
 	-mOnRepeat : bool

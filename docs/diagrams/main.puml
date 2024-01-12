@@ -42,6 +42,21 @@ class HomePage {
 }
 
 
+class LyricsPage {
+	+LyricsPage(QWidget* parent)
+	-mLyrics : LyricsTextCapture
+	+loadTrack(TrackId trackId) : void
+}
+
+
+class LyricsTextCapture {
+	+LyricsTextCapture(QWidget* parent)
+	+LyricsTextCapture(const QString& capture, QWidget* parent)
+	-loadLyricsFromFile(const QString& fileName) : void
+	+setLyrics(TrackId trackId) : void
+}
+
+
 class MainWindow {
 	+MainWindow(QWidget* parent)
 	+~MainWindow()
@@ -52,17 +67,21 @@ class MainWindow {
 	-ui : Ui::MainWindow*
 	-onArtistsButtonClicked() : void
 	-onHomeButtonClicked() : void
+	-onLyricsButtonClicked() : void
 	-onMuteButtonClicked() : void
 	-onNavigatedToArtist(ArtistId artistId) : void
 	-onNavigatedToHome() : void
 	-onNavigatedToPlaylist(PlaylistId playlistId) : void
 	-onNavigatedToSearch() : void
 	-onNavigatedToTrack(PlaylistId playlistId, TrackId trackId) : void
+	-onNextButtonClicked() : void
 	-onPlayButtonClicked() : void
 	-onPlaylistsButtonClicked() : void
+	-onPrevButtonClicked() : void
 	-onRepeatButtonClicked() : void
 	-onSearchButtonClicked() : void
 	-onSeekbarReleased() : void
+	-onSeekbarValueChanged(int value) : void
 	-onShuffleButtonClicked() : void
 	-onStopButtonClicked() : void
 	-onViewOriginButtonClicked() : void
@@ -159,8 +178,11 @@ class TrackListPage {
 
 class Ui_MainWindow {
 	+artistsPage : ArtistsPage*
+	+currentTimeLabel : DurationLabel*
+	+totalTimeLabel : DurationLabel*
 	+sidebarFavButton : FavoriteButton*
 	+homePage : HomePage*
+	+lyricsPage : LyricsPage*
 	+seekbar : MediaSlider*
 	+volume : MediaSlider*
 	+playlistsPage : PlaylistsPage*
@@ -170,18 +192,22 @@ class Ui_MainWindow {
 	+appLabel_2 : QLabel*
 	+appLabel_3 : QLabel*
 	+appLabel_4 : QLabel*
+	+appLabel_5 : QLabel*
 	+background : QLabel*
 	+controlFrameLabel : QLabel*
 	+controlLabel : QLabel*
 	+coverLabel : QLabel*
+	+iconLabel : QLabel*
 	+label : QLabel*
 	+label_2 : QLabel*
 	+label_3 : QLabel*
+	+label_4 : QLabel*
 	+tracklistCoverLabel : QLabel*
 	+tracklistNameLabel : QLabel*
 	+searchInput : QLineEdit*
 	+artistsButton : QPushButton*
 	+homeButton : QPushButton*
+	+lyricsButton : QPushButton*
 	+nextButton : QPushButton*
 	+playlistsButton : QPushButton*
 	+prevButton : QPushButton*
@@ -191,17 +217,20 @@ class Ui_MainWindow {
 	+viewTracklistOriginButton : QPushButton*
 	+artistsListArea : QScrollArea*
 	+favoritesListArea : QScrollArea*
+	+lyricsArea : QScrollArea*
 	+playlistsListArea : QScrollArea*
 	+searchListArea : QScrollArea*
 	+systemQueueListArea : QScrollArea*
 	+tracklistArea : QScrollArea*
 	+userQueueListArea : QScrollArea*
 	+stackedWidget : QStackedWidget*
+	+lyricsText : QTextEdit*
 	+sidebarButtons : QVBoxLayout*
 	+artistsList : QWidget*
 	+centralWidget : QWidget*
 	+favoritesList : QWidget*
 	+layoutWidget : QWidget*
+	+lyricsBox : QWidget*
 	+playlistsScrollList : QWidget*
 	+searchlist : QWidget*
 	+systemQueueList : QWidget*
@@ -231,6 +260,7 @@ class WidgetCapture <template<class WidgetClass>> {
 enum MainWindow::PageId {
 	Artists
 	Home
+	Lyrics
 	Playlists
 	Search
 	Tracklist
@@ -252,6 +282,9 @@ namespace Ui {
 
 
 .Page <|-- .HomePage
+
+
+.Page <|-- .LyricsPage
 
 
 .Page <|-- .PlaylistsPage
@@ -284,6 +317,9 @@ namespace Ui {
 .Ui_MainWindow <|-- Ui.MainWindow
 
 
+.WidgetCapture <|-- .LyricsTextCapture
+
+
 .WidgetCapture <|-- .ScrollListCapture
 
 
@@ -296,6 +332,9 @@ namespace Ui {
 
 
 .HomePage *-- .FavoriteListCapture
+
+
+.LyricsPage *-- .LyricsTextCapture
 
 
 Ui.MainWindow "4" o-- Ui.MainWindow
@@ -320,6 +359,9 @@ Ui.MainWindow "4" o-- Ui.MainWindow
 
 
 .Ui_MainWindow o-- .HomePage
+
+
+.Ui_MainWindow o-- .LyricsPage
 
 
 .Ui_MainWindow o-- .PlaylistsPage
